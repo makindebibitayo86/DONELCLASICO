@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — DON ELCLASICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Barlow:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* ── DESIGN TOKENS (dark, mirrors parent) ── */
+    :root {
+      --black: #080808; --off-black: #0e0e0e; --dark: #141414;
+      --charcoal: #1c1c1c; --mid: #2a2a2a; --slate: #3a3a3a;
+      --white: #f2f0ec; --warm-white: #e8e4de;
+      --silver: #a8a49e; --silver-light: #c8c4bc; --silver-dark: #6a6660;
+      --accent: #b8a898; --accent-light: #d4c8b8; --accent-dark: #8a7e70;
+      --text-muted: #787470; --text-light: #b0aca6;
+      --border: rgba(184,168,152,0.18); --border-light: rgba(255,255,255,0.06);
+      --glass: rgba(255,255,255,0.02);
+      --radius: 1px;
+      --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Barlow', sans-serif;
+      --danger: #c0392b; --danger-light: rgba(192,57,43,0.12);
+      --success: #27ae60; --success-light: rgba(39,174,96,0.12);
+      --warn: #e67e22; --warn-light: rgba(230,126,34,0.1);
+    }
+    body.light {
+      --black: #f4f1ec; --off-black: #ede9e2; --dark: #e6e2da; --charcoal: #ddd9d0;
+      --mid: #ccc8c0; --slate: #b8b4ac; --white: #1a1814; --warm-white: #2a2620;
+      --silver: #6a6660; --silver-light: #4a4640; --silver-dark: #8a8880;
+      --accent: #7a6e60; --accent-light: #5a4e42; --accent-dark: #a09080;
+      --text-muted: #7a7470; --text-light: #5a5450;
+      --border: rgba(100,90,80,0.2); --border-light: rgba(0,0,0,0.08);
+      --glass: rgba(0,0,0,0.02);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--black); color: var(--white);
+      min-height: 100vh; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.45s ease, color 0.45s ease;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; background: none; font-family: inherit; cursor: pointer; }
+    input, textarea, select { font-family: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ── NAVBAR ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      background: rgba(8,8,8,0.96);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 var(--border);
+      transition: background 0.4s ease;
+    }
+    body.light .nav { background: rgba(244,241,236,0.96); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-svg { height: 28px; width: 28px; color: var(--white); flex-shrink: 0; }
+    .nav-logo-text {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--white);
+    }
+    .nav-badge {
+      font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid var(--border); padding: 3px 8px;
+      margin-left: 0.5rem;
+    }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-home-link {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-muted); transition: color 0.3s;
+    }
+    .nav-home-link:hover { color: var(--accent); }
+    .logout-btn {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted); padding: 6px 14px; border: 1px solid var(--border);
+      transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .logout-btn:hover { color: var(--danger); border-color: var(--danger); }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle { background: none; border: none; cursor: pointer; display: flex; align-items: center; }
+    .theme-toggle-track {
+      width: 46px; height: 24px; background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border); border-radius: 999px;
+      position: relative; display: flex; align-items: center; padding: 2px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .theme-toggle-thumb {
+      width: 18px; height: 18px; border-radius: 50%; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.4s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .icon-sun { display: none; color: var(--black); }
+    .icon-moon { display: block; color: var(--black); }
+    body.light .theme-toggle-thumb { transform: translateX(22px); }
+    body.light .theme-toggle-track { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.14); }
+    body.light .icon-sun { display: block; }
+    body.light .icon-moon { display: none; }
+
+    /* ── LOGIN GATE ── */
+    .login-gate {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 2rem; position: relative; overflow: hidden;
+    }
+    .login-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 40%, rgba(184,168,152,0.05) 0%, transparent 70%),
+        linear-gradient(160deg, var(--charcoal) 0%, var(--black) 100%);
+    }
+    .login-grain {
+      position: absolute; inset: 0; opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+    .login-card {
+      position: relative; z-index: 1; width: 100%; max-width: 420px;
+      border: 1px solid var(--border); background: var(--dark);
+      padding: 3rem 2.5rem;
+    }
+    .login-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.75rem;
+    }
+    .login-title {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+      line-height: 1.15; margin-bottom: 0.5rem;
+    }
+    .login-title em { font-style: italic; font-weight: 400; color: var(--accent-light); }
+    .login-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem; font-weight: 300; }
+    .login-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { position: relative; }
+    .form-group input {
+      width: 100%; padding: 0.85rem 1rem; background: var(--charcoal);
+      border: 1px solid var(--border); color: var(--white);
+      font-size: 0.85rem; outline: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .form-group input:focus { border-color: var(--accent); }
+    .form-group label {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      font-size: 0.75rem; color: var(--text-muted); pointer-events: none;
+      transition: all 0.3s; letter-spacing: 0.05em;
+    }
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label {
+      top: 0; transform: translateY(-50%); font-size: 0.6rem;
+      background: var(--charcoal); padding: 0 4px; color: var(--accent);
+    }
+    .login-error {
+      font-size: 0.75rem; color: var(--danger); padding: 0.75rem 1rem;
+      background: var(--danger-light); border: 1px solid rgba(192,57,43,0.2);
+      display: none;
+    }
+    .login-error.show { display: block; }
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+      padding: 1rem 2.5rem; background: var(--accent); color: var(--black);
+      font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.25em; text-transform: uppercase; width: 100%;
+      position: relative; overflow: hidden; transition: all 0.4s ease;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0; background: var(--accent-light);
+      transform: translateX(-101%); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-primary:hover::before { transform: translateX(0); }
+    .btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+    .btn-primary:disabled { opacity: 0.6; pointer-events: none; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+      padding: 0.7rem 1.5rem; background: transparent; color: var(--text-light);
+      font-size: 0.68rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--border); transition: all 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.2rem; background: var(--danger-light); color: var(--danger);
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+      border: 1px solid rgba(192,57,43,0.25); transition: all 0.3s;
+    }
+    .btn-danger:hover { background: rgba(192,57,43,0.2); }
+    .spinner { animation: spin 0.9s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ADMIN SHELL ── */
+    .admin-shell { display: none; min-height: 100vh; flex-direction: column; }
+    .admin-shell.visible { display: flex; }
+    .admin-body { flex: 1; padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem); max-width: 1300px; margin: 0 auto; width: 100%; }
+
+    /* ── TABS ── */
+    .admin-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+    .tab-btn {
+      padding: 0.85rem 1.75rem; font-size: 0.68rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all 0.3s;
+    }
+    .tab-btn:hover { color: var(--white); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── PANEL HEADER ── */
+    .panel-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .panel-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; }
+    .panel-sub { font-size: 0.8rem; color: var(--text-muted); font-weight: 300; margin-top: 0.3rem; }
+
+    /* ── PRODUCT FORM ── */
+    .product-form {
+      border: 1px solid var(--border); background: var(--dark); padding: 2rem;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .field { position: relative; }
+    .field label {
+      display: block; font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 0.8rem 1rem; background: var(--charcoal);
+      border: 1px solid var(--border); color: var(--white);
+      font-size: 0.85rem; outline: none; transition: border-color 0.3s, background 0.3s;
+    }
+    .field select option { background: var(--charcoal); }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .form-section-label {
+      font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--text-muted); padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-light); margin-bottom: 0.25rem;
+      grid-column: 1 / -1;
+    }
+    .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+    /* Image upload */
+    .img-upload-zone {
+      border: 1px dashed var(--border); padding: 2rem; text-align: center;
+      cursor: pointer; transition: border-color 0.3s, background 0.3s;
+      background: var(--charcoal); position: relative;
+    }
+    .img-upload-zone:hover, .img-upload-zone.dragging { border-color: var(--accent); background: rgba(184,168,152,0.04); }
+    .img-upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .img-upload-zone p { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: 300; }
+    .img-upload-zone span { font-size: 0.65rem; color: var(--text-muted); }
+    .img-preview-wrap { margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .img-preview {
+      width: 90px; height: 90px; object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .img-url-display {
+      margin-top: 0.75rem; font-size: 0.72rem; color: var(--accent);
+      word-break: break-all; background: var(--mid); padding: 0.5rem 0.75rem;
+    }
+    .upload-progress {
+      display: none; margin-top: 0.75rem; align-items: center; gap: 1rem;
+    }
+    .upload-progress.show { display: flex; }
+    .progress-bar-wrap { flex: 1; height: 2px; background: var(--mid); }
+    .progress-bar-fill {
+      height: 100%; background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
+      width: 0%; transition: width 0.3s ease;
+    }
+    .progress-label { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+
+    /* ── CATALOGUE TABLE ── */
+    .catalogue-toolbar {
+      display: flex; gap: 1rem; align-items: center;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .search-input {
+      padding: 0.7rem 1rem; background: var(--dark); border: 1px solid var(--border);
+      color: var(--white); font-size: 0.82rem; outline: none;
+      width: 240px; transition: border-color 0.3s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .filter-select {
+      padding: 0.7rem 1rem; background: var(--dark); border: 1px solid var(--border);
+      color: var(--white); font-size: 0.78rem; outline: none; cursor: pointer;
+    }
+    .filter-select option { background: var(--dark); }
+    .items-count { font-size: 0.72rem; color: var(--text-muted); margin-left: auto; }
+
+    .product-table { width: 100%; border-collapse: collapse; }
+    .product-table th {
+      text-align: left; padding: 0.75rem 1rem; font-size: 0.6rem;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
+      border-bottom: 1px solid var(--border); font-weight: 500;
+    }
+    .product-table td {
+      padding: 1rem; border-bottom: 1px solid var(--border-light);
+      vertical-align: middle; font-size: 0.82rem;
+    }
+    .product-table tr:hover td { background: var(--glass); }
+    .product-table tr.inactive td { opacity: 0.45; }
+    .prod-thumb {
+      width: 52px; height: 52px; object-fit: cover; border: 1px solid var(--border);
+      background: var(--mid);
+    }
+    .prod-name { font-weight: 500; color: var(--white); }
+    .prod-cat {
+      font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 2px;
+    }
+    .badge {
+      display: inline-block; font-size: 0.58rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 3px 8px; border-radius: 0;
+    }
+    .badge-active { background: var(--success-light); color: var(--success); border: 1px solid rgba(39,174,96,0.25); }
+    .badge-inactive { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(192,57,43,0.2); }
+    .badge-label { background: var(--warn-light); color: var(--warn); border: 1px solid rgba(230,126,34,0.2); }
+    .row-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .act-btn {
+      padding: 5px 10px; font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase; border: 1px solid var(--border);
+      color: var(--text-light); transition: all 0.25s;
+    }
+    .act-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .act-btn.del { color: var(--danger); border-color: rgba(192,57,43,0.25); }
+    .act-btn.del:hover { background: var(--danger-light); }
+    .table-empty {
+      text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.85rem;
+    }
+    .table-loading {
+      text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.82rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    }
+
+    /* ── EDIT DRAWER ── */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 200; opacity: 0; visibility: hidden; transition: all 0.4s ease;
+    }
+    .drawer-overlay.open { opacity: 1; visibility: visible; }
+    .drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; width: 560px; max-width: 95vw;
+      background: var(--dark); border-left: 1px solid var(--border);
+      z-index: 201; transform: translateX(100%);
+      transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .drawer-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
+    .drawer-close { color: var(--text-muted); transition: color 0.3s; }
+    .drawer-close:hover { color: var(--accent); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 2rem; }
+    .drawer-body .form-grid { grid-template-columns: 1fr; }
+    .drawer-foot {
+      padding: 1.5rem 2rem; border-top: 1px solid var(--border);
+      display: flex; gap: 1rem; flex-shrink: 0;
+    }
+
+    /* ── CONFIRM MODAL ── */
+    .confirm-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      z-index: 300; display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: all 0.3s;
+    }
+    .confirm-overlay.open { opacity: 1; visibility: visible; }
+    .confirm-box {
+      background: var(--dark); border: 1px solid var(--border);
+      padding: 2.5rem; max-width: 400px; width: 90%; text-align: center;
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .confirm-overlay.open .confirm-box { transform: none; }
+    .confirm-icon { color: var(--danger); margin: 0 auto 1rem; }
+    .confirm-title { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .confirm-msg { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.75rem; line-height: 1.6; }
+    .confirm-actions { display: flex; gap: 1rem; justify-content: center; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--charcoal); border: 1px solid var(--border);
+      padding: 0.85rem 1.5rem; display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.78rem; z-index: 400; white-space: nowrap;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+      opacity: 0;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success .toast-icon { color: var(--success); }
+    .toast.error .toast-icon { color: var(--danger); }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      padding: 1.5rem; background: var(--dark); text-align: center;
+    }
+    .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--accent-light); display: block; }
+    .stat-label { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── FOOTER ── */
+    .admin-footer {
+      padding: 1.5rem clamp(1.5rem, 5vw, 4rem); border-top: 1px solid var(--border-light);
+      font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: 1; }
+      .product-table { display: block; overflow-x: auto; }
+      .drawer { width: 100%; max-width: 100%; }
+      .panel-header { flex-direction: column; align-items: flex-start; }
+      .nav-badge { display: none; }
+    }
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .catalogue-toolbar { flex-direction: column; align-items: stretch; }
+      .search-input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN GATE ── -->
+  <div id="loginGate">
+    <!-- Minimal nav for login screen -->
+    <div style="position:sticky;top:0;z-index:10;padding:0 clamp(1.5rem,5vw,4rem);background:rgba(8,8,8,0.96);backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--border);transition:background 0.4s;" id="loginNav">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:68px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg style="height:28px;width:28px;color:var(--white);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><path fill="currentColor" fill-rule="evenodd" d="M 745.837,613.206 L 745.837,627.847 L 744.976,640.766 L 744.115,650.239 L 743.254,658.852 L 742.392,665.742 L 741.531,672.632 L 740.670,678.660 L 739.809,684.689 L 738.947,689.856 L 737.225,699.330 L 734.641,712.249 L 732.919,720.000 L 729.474,733.780 L 726.890,743.254 L 724.306,751.866 L 718.278,769.952 L 715.694,776.842 L 710.526,789.761 L 707.943,795.789 L 702.775,806.986 L 701.053,810.431 L 698.469,815.598 L 695.024,821.627 L 691.579,827.656 L 688.995,831.962 L 682.105,842.297 L 677.799,848.325 L 671.770,856.077 L 665.742,862.967 L 651.100,877.608 L 645.072,882.775 L 641.627,885.359 L 638.182,887.943 L 630.431,893.110 L 626.124,895.694 L 621.818,898.278 L 618.373,900.000 L 613.206,902.584 L 605.455,906.029 L 598.565,908.612 L 595.981,909.474 L 593.397,910.335 L 584.785,912.919 L 581.340,913.780 L 577.895,914.641 L 573.589,915.502 L 569.282,916.364 L 564.115,917.225 L 558.947,918.086 L 551.196,918.947 L 540.861,919.809 L 528.804,919.809 L 522.775,918.947 L 518.469,918.086 L 515.885,917.225 L 513.301,916.364 L 508.134,913.780 L 505.550,912.057 L 502.967,910.335 L 496.077,903.445 L 494.354,900.861 L 492.632,898.278 L 490.048,893.110 L 487.464,885.359 L 486.603,881.053 L 485.742,874.163 L 485.742,816.459 L 348.804,817.321 L 348.804,873.301 L 347.943,879.330 L 347.081,882.775 L 346.220,886.220 L 345.359,888.804 L 344.498,891.388 L 341.914,896.555 L 340.191,899.139 L 338.469,901.722 L 330.718,909.474 L 328.134,911.196 L 323.828,913.780 L 322.105,914.641 L 317.799,916.364 L 315.215,917.225 L 311.770,918.086 L 308.325,918.947 L 304.019,919.809 L 298.852,920.670 L 291.100,921.531 L 277.321,922.392 L 257.512,922.392 L 255.789,924.115 L 256.651,970.622 L 617.512,970.622 L 627.847,969.761 L 634.737,968.900 L 639.904,968.038 L 644.211,967.177 L 648.517,966.316 L 658.852,963.732 L 667.464,961.148 L 670.048,960.287 L 679.522,956.842 L 685.550,954.258 L 691.579,951.675 L 703.636,945.646 L 713.971,939.617 L 720.861,935.311 L 723.445,932.727 L 726.029,931.866 L 728.612,930.144 L 738.947,922.392 L 743.254,918.947 L 754.450,909.474 L 780.287,883.636 L 786.316,876.746 L 796.651,863.828 L 800.096,859.522 L 806.986,850.048 L 813.014,841.435 L 814.737,838.852 L 822.488,826.794 L 826.794,819.904 L 830.239,813.876 L 833.684,807.847 L 840.574,794.928 L 843.158,789.761 L 850.909,773.397 L 854.354,765.646 L 856.077,761.340 L 857.799,757.033 L 862.105,745.837 L 864.689,738.947 L 870.718,720.861 L 873.301,712.249 L 875.024,706.220 L 876.746,700.191 L 879.330,689.856 L 881.914,678.660 L 882.775,674.354 L 885.359,658.852 L 886.220,652.823 L 887.081,646.794 L 887.943,638.182 L 888.804,629.569 L 888.804,612.344 Z M 254.067,110.239 L 254.067,154.163 L 255.789,155.885 L 278.182,155.885 L 289.378,156.746 L 296.268,157.608 L 301.435,158.469 L 304.880,159.330 L 308.325,160.191 L 310.909,161.053 L 316.938,163.636 L 318.660,164.498 L 322.967,167.081 L 326.411,169.665 L 333.301,176.555 L 336.746,180.861 L 338.469,183.445 L 339.330,185.167 L 341.914,191.196 L 342.775,193.780 L 343.636,196.364 L 344.498,200.670 L 345.359,205.837 L 346.220,219.617 L 346.220,303.158 L 344.498,306.603 L 84.402,306.603 L 82.679,308.325 L 82.679,348.804 L 84.402,350.526 L 95.598,350.526 L 103.349,351.388 L 108.517,352.249 L 112.823,353.110 L 115.407,353.971 L 119.713,355.694 L 123.158,357.416 L 128.325,360.000 L 130.909,361.722 L 139.522,370.335 L 142.105,373.780 L 145.550,380.670 L 148.134,388.421 L 148.995,391.866 L 149.856,396.172 L 150.718,403.062 L 150.718,690.718 L 149.856,696.746 L 148.995,700.191 L 148.134,703.636 L 147.273,706.220 L 145.550,710.526 L 144.689,712.249 L 143.828,713.971 L 142.105,716.555 L 140.383,719.139 L 136.938,723.445 L 135.215,725.167 L 130.909,728.612 L 128.325,730.335 L 125.742,732.057 L 124.019,732.919 L 119.713,734.641 L 117.129,735.502 L 114.545,736.364 L 111.100,737.225 L 105.933,738.086 L 99.904,738.947 L 85.263,738.947 L 83.541,739.809 L 83.541,779.426 L 674.354,779.426 L 676.077,777.703 L 676.938,775.120 L 678.660,770.813 L 681.244,763.062 L 685.550,750.144 L 688.134,740.670 L 688.995,737.225 L 689.856,732.919 L 688.995,730.335 L 486.603,729.474 L 486.603,404.785 L 349.665,404.785 L 348.804,730.335 L 309.187,731.196 L 288.517,731.196 L 279.043,730.335 L 275.598,729.474 L 270.431,726.890 L 266.986,723.445 L 266.124,723.445 L 263.541,720.861 L 260.957,717.416 L 259.234,713.971 L 256.651,708.804 L 255.789,706.220 L 254.928,703.636 L 254.067,699.330 L 253.206,693.301 L 252.344,681.244 L 253.206,565.837 L 309.187,565.837 L 309.187,519.330 L 254.067,519.330 L 252.344,517.608 L 252.344,360.861 L 254.067,359.139 L 686.411,359.139 L 685.550,306.603 L 485.742,305.742 L 485.742,192.919 L 486.603,188.612 L 487.464,184.306 L 490.909,177.416 L 493.493,173.971 L 496.077,171.388 L 499.522,168.804 L 504.689,166.220 L 507.273,165.359 L 510.718,164.498 L 589.091,164.498 L 595.981,165.359 L 601.148,166.220 L 611.483,168.804 L 621.818,172.249 L 626.124,173.971 L 637.321,179.139 L 641.627,181.722 L 650.239,186.890 L 656.268,191.196 L 659.713,193.780 L 664.880,198.086 L 673.493,205.837 L 679.522,211.866 L 679.522,212.727 L 686.411,219.617 L 690.718,224.785 L 698.469,235.120 L 703.636,242.871 L 707.943,249.761 L 710.526,254.067 L 714.833,261.818 L 717.416,266.986 L 721.722,275.598 L 726.029,285.072 L 728.612,291.100 L 730.335,295.407 L 732.057,299.713 L 734.641,306.603 L 738.947,318.660 L 742.392,329.856 L 747.560,347.943 L 748.421,351.388 L 751.005,362.584 L 752.727,370.335 L 753.589,374.641 L 756.172,390.144 L 757.033,396.172 L 757.895,402.201 L 758.756,409.091 L 759.617,416.842 L 760.478,427.177 L 761.340,440.957 L 761.340,484.019 L 760.478,498.660 L 759.617,508.995 L 758.756,515.885 L 757.033,517.608 L 522.775,518.469 L 522.775,521.914 L 523.636,522.775 L 523.636,526.220 L 522.775,543.445 L 523.636,567.560 L 567.560,567.560 L 568.421,568.421 L 702.775,569.282 L 846.603,569.282 L 890.526,570.144 L 896.555,571.005 L 900.000,571.866 L 906.029,573.589 L 910.335,575.311 L 915.502,577.895 L 918.086,579.617 L 920.670,581.340 L 924.976,584.785 L 930.144,589.952 L 932.727,593.397 L 934.450,595.981 L 937.895,602.010 L 939.617,606.316 L 940.478,608.900 L 941.340,611.483 L 942.201,614.928 L 943.062,618.373 L 943.923,623.541 L 944.785,633.876 L 943.923,650.239 L 943.923,663.158 L 996.459,663.158 L 995.598,432.344 L 943.923,433.206 L 943.923,439.234 L 944.785,454.737 L 943.923,465.933 L 943.062,471.100 L 942.201,474.545 L 941.340,477.990 L 940.478,480.574 L 939.617,483.158 L 937.895,486.603 L 935.311,491.770 L 933.589,494.354 L 931.005,497.799 L 923.254,505.550 L 915.502,510.718 L 913.780,511.579 L 912.057,512.440 L 904.306,515.024 L 900.861,515.885 L 896.555,515.024 L 896.555,453.876 L 895.694,440.096 L 894.833,429.761 L 893.971,422.010 L 893.110,414.258 L 892.249,407.368 L 891.388,401.340 L 889.665,390.144 L 887.943,380.670 L 884.498,363.445 L 881.914,352.249 L 881.053,348.804 L 878.469,339.330 L 876.746,333.301 L 870.718,315.215 L 867.273,305.742 L 861.244,291.100 L 856.077,279.904 L 853.493,274.737 L 849.187,266.124 L 844.880,258.373 L 841.435,252.344 L 838.852,248.038 L 834.545,241.148 L 831.100,235.981 L 825.933,228.230 L 821.627,222.201 L 813.876,211.866 L 810.431,207.560 L 806.124,202.392 L 800.957,196.364 L 776.842,172.249 L 770.813,167.081 L 766.507,163.636 L 762.201,160.191 L 751.866,152.440 L 741.531,145.550 L 734.641,141.244 L 728.612,137.799 L 721.722,134.354 L 709.665,128.325 L 701.914,124.880 L 695.024,122.297 L 689.856,120.574 L 682.105,117.990 L 676.077,116.268 L 662.297,112.823 L 652.823,111.100 L 646.794,110.239 L 638.182,109.378 Z"/></svg>
+          <span style="font-family:var(--font-display);font-size:1rem;font-weight:700;letter-spacing:0.35em;text-transform:uppercase;">DON ELCLASICO</span>
+        </div>
+        <button class="theme-toggle" id="loginThemeToggle" aria-label="Toggle theme">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+              <svg class="icon-sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg class="icon-moon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="login-gate">
+      <div class="login-bg"></div>
+      <div class="login-grain"></div>
+      <div class="login-card">
+        <p class="login-eyebrow">— Restricted Access —</p>
+        <h1 class="login-title">Owner<br/><em>Portal.</em></h1>
+        <p class="login-sub">Enter your credentials to manage the collection.</p>
+        <form class="login-form" id="loginForm" novalidate>
+          <div class="form-group">
+            <input type="text" id="loginUser" placeholder=" " autocomplete="username" required />
+            <label for="loginUser">Username</label>
+          </div>
+          <div class="form-group">
+            <input type="password" id="loginPass" placeholder=" " autocomplete="current-password" required />
+            <label for="loginPass">Password</label>
+          </div>
+          <div class="login-error" id="loginError">Incorrect credentials. Please try again.</div>
+          <button type="submit" class="btn-primary" id="loginBtn">
+            <span id="loginLabel">Enter Portal</span>
+            <svg id="loginSpinner" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"/></svg>
+          </button>
+        </form>
+        <p style="font-size:0.65rem;color:var(--text-muted);margin-top:1.5rem;text-align:center;">
+          <a href="index.html" style="color:var(--accent);letter-spacing:0.1em;">← Back to Site</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ADMIN SHELL ── -->
+  <div class="admin-shell" id="adminShell">
+
+    <!-- Navbar -->
+    <nav class="nav">
+      <div class="nav-inner">
+        <div class="nav-brand">
+          <svg class="nav-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><path fill="currentColor" fill-rule="evenodd" d="M 745.837,613.206 L 745.837,627.847 L 744.976,640.766 L 744.115,650.239 L 743.254,658.852 L 742.392,665.742 L 741.531,672.632 L 740.670,678.660 L 739.809,684.689 L 738.947,689.856 L 737.225,699.330 L 734.641,712.249 L 732.919,720.000 L 729.474,733.780 L 726.890,743.254 L 724.306,751.866 L 718.278,769.952 L 715.694,776.842 L 710.526,789.761 L 707.943,795.789 L 702.775,806.986 L 701.053,810.431 L 698.469,815.598 L 695.024,821.627 L 691.579,827.656 L 688.995,831.962 L 682.105,842.297 L 677.799,848.325 L 671.770,856.077 L 665.742,862.967 L 651.100,877.608 L 645.072,882.775 L 641.627,885.359 L 638.182,887.943 L 630.431,893.110 L 626.124,895.694 L 621.818,898.278 L 618.373,900.000 L 613.206,902.584 L 605.455,906.029 L 598.565,908.612 L 595.981,909.474 L 593.397,910.335 L 584.785,912.919 L 581.340,913.780 L 577.895,914.641 L 573.589,915.502 L 569.282,916.364 L 564.115,917.225 L 558.947,918.086 L 551.196,918.947 L 540.861,919.809 L 528.804,919.809 L 522.775,918.947 L 518.469,918.086 L 515.885,917.225 L 513.301,916.364 L 508.134,913.780 L 505.550,912.057 L 502.967,910.335 L 496.077,903.445 L 494.354,900.861 L 492.632,898.278 L 490.048,893.110 L 487.464,885.359 L 486.603,881.053 L 485.742,874.163 L 485.742,816.459 L 348.804,817.321 L 348.804,873.301 L 347.943,879.330 L 347.081,882.775 L 346.220,886.220 L 345.359,888.804 L 344.498,891.388 L 341.914,896.555 L 340.191,899.139 L 338.469,901.722 L 330.718,909.474 L 328.134,911.196 L 323.828,913.780 L 322.105,914.641 L 317.799,916.364 L 315.215,917.225 L 311.770,918.086 L 308.325,918.947 L 304.019,919.809 L 298.852,920.670 L 291.100,921.531 L 277.321,922.392 L 257.512,922.392 L 255.789,924.115 L 256.651,970.622 L 617.512,970.622 L 627.847,969.761 L 634.737,968.900 L 639.904,968.038 L 644.211,967.177 L 648.517,966.316 L 658.852,963.732 L 667.464,961.148 L 670.048,960.287 L 679.522,956.842 L 685.550,954.258 L 691.579,951.675 L 703.636,945.646 L 713.971,939.617 L 720.861,935.311 L 723.445,932.727 L 726.029,931.866 L 728.612,930.144 L 738.947,922.392 L 743.254,918.947 L 754.450,909.474 L 780.287,883.636 L 786.316,876.746 L 796.651,863.828 L 800.096,859.522 L 806.986,850.048 L 813.014,841.435 L 814.737,838.852 L 822.488,826.794 L 826.794,819.904 L 830.239,813.876 L 833.684,807.847 L 840.574,794.928 L 843.158,789.761 L 850.909,773.397 L 854.354,765.646 L 856.077,761.340 L 857.799,757.033 L 862.105,745.837 L 864.689,738.947 L 870.718,720.861 L 873.301,712.249 L 875.024,706.220 L 876.746,700.191 L 879.330,689.856 L 881.914,678.660 L 882.775,674.354 L 885.359,658.852 L 886.220,652.823 L 887.081,646.794 L 887.943,638.182 L 888.804,629.569 L 888.804,612.344 Z M 254.067,110.239 L 254.067,154.163 L 255.789,155.885 L 278.182,155.885 L 289.378,156.746 L 296.268,157.608 L 301.435,158.469 L 304.880,159.330 L 308.325,160.191 L 310.909,161.053 L 316.938,163.636 L 318.660,164.498 L 322.967,167.081 L 326.411,169.665 L 333.301,176.555 L 336.746,180.861 L 338.469,183.445 L 339.330,185.167 L 341.914,191.196 L 342.775,193.780 L 343.636,196.364 L 344.498,200.670 L 345.359,205.837 L 346.220,219.617 L 346.220,303.158 L 344.498,306.603 L 84.402,306.603 L 82.679,308.325 L 82.679,348.804 L 84.402,350.526 L 95.598,350.526 L 103.349,351.388 L 108.517,352.249 L 112.823,353.110 L 115.407,353.971 L 119.713,355.694 L 123.158,357.416 L 128.325,360.000 L 130.909,361.722 L 139.522,370.335 L 142.105,373.780 L 145.550,380.670 L 148.134,388.421 L 148.995,391.866 L 149.856,396.172 L 150.718,403.062 L 150.718,690.718 L 149.856,696.746 L 148.995,700.191 L 148.134,703.636 L 147.273,706.220 L 145.550,710.526 L 144.689,712.249 L 143.828,713.971 L 142.105,716.555 L 140.383,719.139 L 136.938,723.445 L 135.215,725.167 L 130.909,728.612 L 128.325,730.335 L 125.742,732.057 L 124.019,732.919 L 119.713,734.641 L 117.129,735.502 L 114.545,736.364 L 111.100,737.225 L 105.933,738.086 L 99.904,738.947 L 85.263,738.947 L 83.541,739.809 L 83.541,779.426 L 674.354,779.426 L 676.077,777.703 L 676.938,775.120 L 678.660,770.813 L 681.244,763.062 L 685.550,750.144 L 688.134,740.670 L 688.995,737.225 L 689.856,732.919 L 688.995,730.335 L 486.603,729.474 L 486.603,404.785 L 349.665,404.785 L 348.804,730.335 L 309.187,731.196 L 288.517,731.196 L 279.043,730.335 L 275.598,729.474 L 270.431,726.890 L 266.986,723.445 L 266.124,723.445 L 263.541,720.861 L 260.957,717.416 L 259.234,713.971 L 256.651,708.804 L 255.789,706.220 L 254.928,703.636 L 254.067,699.330 L 253.206,693.301 L 252.344,681.244 L 253.206,565.837 L 309.187,565.837 L 309.187,519.330 L 254.067,519.330 L 252.344,517.608 L 252.344,360.861 L 254.067,359.139 L 686.411,359.139 L 685.550,306.603 L 485.742,305.742 L 485.742,192.919 L 486.603,188.612 L 487.464,184.306 L 490.909,177.416 L 493.493,173.971 L 496.077,171.388 L 499.522,168.804 L 504.689,166.220 L 507.273,165.359 L 510.718,164.498 L 589.091,164.498 L 595.981,165.359 L 601.148,166.220 L 611.483,168.804 L 621.818,172.249 L 626.124,173.971 L 637.321,179.139 L 641.627,181.722 L 650.239,186.890 L 656.268,191.196 L 659.713,193.780 L 664.880,198.086 L 673.493,205.837 L 679.522,211.866 L 679.522,212.727 L 686.411,219.617 L 690.718,224.785 L 698.469,235.120 L 703.636,242.871 L 707.943,249.761 L 710.526,254.067 L 714.833,261.818 L 717.416,266.986 L 721.722,275.598 L 726.029,285.072 L 728.612,291.100 L 730.335,295.407 L 732.057,299.713 L 734.641,306.603 L 738.947,318.660 L 742.392,329.856 L 747.560,347.943 L 748.421,351.388 L 751.005,362.584 L 752.727,370.335 L 753.589,374.641 L 756.172,390.144 L 757.033,396.172 L 757.895,402.201 L 758.756,409.091 L 759.617,416.842 L 760.478,427.177 L 761.340,440.957 L 761.340,484.019 L 760.478,498.660 L 759.617,508.995 L 758.756,515.885 L 757.033,517.608 L 522.775,518.469 L 522.775,521.914 L 523.636,522.775 L 523.636,526.220 L 522.775,543.445 L 523.636,567.560 L 567.560,567.560 L 568.421,568.421 L 702.775,569.282 L 846.603,569.282 L 890.526,570.144 L 896.555,571.005 L 900.000,571.866 L 906.029,573.589 L 910.335,575.311 L 915.502,577.895 L 918.086,579.617 L 920.670,581.340 L 924.976,584.785 L 930.144,589.952 L 932.727,593.397 L 934.450,595.981 L 937.895,602.010 L 939.617,606.316 L 940.478,608.900 L 941.340,611.483 L 942.201,614.928 L 943.062,618.373 L 943.923,623.541 L 944.785,633.876 L 943.923,650.239 L 943.923,663.158 L 996.459,663.158 L 995.598,432.344 L 943.923,433.206 L 943.923,439.234 L 944.785,454.737 L 943.923,465.933 L 943.062,471.100 L 942.201,474.545 L 941.340,477.990 L 940.478,480.574 L 939.617,483.158 L 937.895,486.603 L 935.311,491.770 L 933.589,494.354 L 931.005,497.799 L 923.254,505.550 L 915.502,510.718 L 913.780,511.579 L 912.057,512.440 L 904.306,515.024 L 900.861,515.885 L 896.555,515.024 L 896.555,453.876 L 895.694,440.096 L 894.833,429.761 L 893.971,422.010 L 893.110,414.258 L 892.249,407.368 L 891.388,401.340 L 889.665,390.144 L 887.943,380.670 L 884.498,363.445 L 881.914,352.249 L 881.053,348.804 L 878.469,339.330 L 876.746,333.301 L 870.718,315.215 L 867.273,305.742 L 861.244,291.100 L 856.077,279.904 L 853.493,274.737 L 849.187,266.124 L 844.880,258.373 L 841.435,252.344 L 838.852,248.038 L 834.545,241.148 L 831.100,235.981 L 825.933,228.230 L 821.627,222.201 L 813.876,211.866 L 810.431,207.560 L 806.124,202.392 L 800.957,196.364 L 776.842,172.249 L 770.813,167.081 L 766.507,163.636 L 762.201,160.191 L 751.866,152.440 L 741.531,145.550 L 734.641,141.244 L 728.612,137.799 L 721.722,134.354 L 709.665,128.325 L 701.914,124.880 L 695.024,122.297 L 689.856,120.574 L 682.105,117.990 L 676.077,116.268 L 662.297,112.823 L 652.823,111.100 L 646.794,110.239 L 638.182,109.378 Z"/></svg>
+          <span class="nav-logo-text">DON ELCLASICO</span>
+          <span class="nav-badge">Admin</span>
+        </div>
+        <div class="nav-right">
+          <a href="index.html" class="nav-home-link">← Live Site</a>
+          <button class="theme-toggle" id="adminThemeToggle" aria-label="Toggle theme">
+            <span class="theme-toggle-track">
+              <span class="theme-toggle-thumb">
+                <svg class="icon-sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="icon-moon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              </span>
+            </span>
+          </button>
+          <button class="logout-btn" id="logoutBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Admin Body -->
+    <div class="admin-body">
+
+      <!-- TABS -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="catalogue">Manage Catalogue</button>
+        <button class="tab-btn" data-tab="add">Add New Item</button>
+      </div>
+
+      <!-- ── TAB: MANAGE CATALOGUE ── -->
+      <div class="tab-panel active" id="tab-catalogue">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Collection</h2>
+            <p class="panel-sub">Edit, toggle visibility, or remove items from the live catalogue.</p>
+          </div>
+          <button class="btn-primary" style="width:auto;padding:0.75rem 1.75rem;" id="refreshBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+          <div class="stat-card"><span class="stat-num" id="statTotal">—</span><span class="stat-label">Total Items</span></div>
+          <div class="stat-card"><span class="stat-num" id="statActive">—</span><span class="stat-label">Live</span></div>
+          <div class="stat-card"><span class="stat-num" id="statHidden">—</span><span class="stat-label">Hidden</span></div>
+          <div class="stat-card"><span class="stat-num" id="statCats">—</span><span class="stat-label">Categories</span></div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="catalogue-toolbar">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search by name…" />
+          <select class="filter-select" id="filterCat">
+            <option value="all">All Categories</option>
+            <option value="suit">Suits</option>
+            <option value="agbada">Agbada</option>
+            <option value="casual">Smart Casual</option>
+            <option value="native">Native Wear</option>
+            <option value="accessories">Accessories</option>
+          </select>
+          <select class="filter-select" id="filterStatus">
+            <option value="all">All Status</option>
+            <option value="active">Live</option>
+            <option value="inactive">Hidden</option>
+          </select>
+          <span class="items-count" id="itemsCount"></span>
+        </div>
+
+        <!-- Table -->
+        <div id="tableWrap">
+          <div class="table-loading" id="tableLoader">
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            Loading catalogue…
+          </div>
+          <table class="product-table" id="productTable" style="display:none;">
+            <thead>
+              <tr>
+                <th style="width:70px;">Image</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productTbody"></tbody>
+          </table>
+          <div class="table-empty" id="tableEmpty" style="display:none;">No items match your filters.</div>
+        </div>
+      </div>
+
+      <!-- ── TAB: ADD NEW ITEM ── -->
+      <div class="tab-panel" id="tab-add">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Add New Item</h2>
+            <p class="panel-sub">Upload an image, fill in the details, and publish to the catalogue instantly.</p>
+          </div>
+        </div>
+
+        <div class="product-form">
+          <div class="form-grid">
+            <div class="form-section-label">Item Details</div>
+
+            <div class="field">
+              <label>Item Name *</label>
+              <input type="text" id="addName" placeholder="e.g. Lagos Bespoke Suit" />
+            </div>
+            <div class="field">
+              <label>Category *</label>
+              <select id="addCategory">
+                <option value="">— Select —</option>
+                <option value="suit">Suits</option>
+                <option value="agbada">Agbada</option>
+                <option value="casual">Smart Casual</option>
+                <option value="native">Native Wear</option>
+                <option value="accessories">Accessories</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Price (₦) *</label>
+              <input type="number" id="addPrice" placeholder="e.g. 250000" min="0" />
+            </div>
+            <div class="field">
+              <label>Badge Label <span style="color:var(--text-muted);font-size:0.58rem;">(optional)</span></label>
+              <input type="text" id="addBadge" placeholder="e.g. New, Bestseller, Limited" />
+            </div>
+            <div class="field">
+              <label>Sort Order <span style="color:var(--text-muted);font-size:0.58rem;">(lower = first)</span></label>
+              <input type="number" id="addSort" placeholder="e.g. 1" min="0" value="0" />
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select id="addActive">
+                <option value="true">Live (visible on site)</option>
+                <option value="false">Hidden (draft)</option>
+              </select>
+            </div>
+
+            <div class="form-section-label">Description & Features</div>
+
+            <div class="field full">
+              <label>Description</label>
+              <textarea id="addDesc" rows="3" placeholder="Briefly describe the piece…"></textarea>
+            </div>
+            <div class="field full">
+              <label>Features <span style="color:var(--text-muted);font-size:0.58rem;">(one per line)</span></label>
+              <textarea id="addFeatures" rows="4" placeholder="100% hand-tailored&#10;Premium Italian wool&#10;Fully lined"></textarea>
+              <p class="field-hint">Each line becomes a separate feature tag on the product modal.</p>
+            </div>
+
+            <div class="form-section-label">Product Image *</div>
+
+            <div class="field full">
+              <div class="img-upload-zone" id="addUploadZone">
+                <input type="file" id="addImageFile" accept="image/*" />
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted);margin:0 auto;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Click or drag & drop to upload image</p>
+                <span>PNG, JPG, WEBP — recommended 800×1000px or taller</span>
+              </div>
+              <div class="img-preview-wrap" id="addPreviewWrap"></div>
+              <div class="upload-progress" id="addUploadProgress">
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" id="addProgressFill"></div></div>
+                <span class="progress-label" id="addProgressLabel">Uploading…</span>
+              </div>
+              <div class="img-url-display" id="addImageUrlDisplay" style="display:none;"></div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" style="width:auto;padding:0.85rem 2.5rem;" id="addSubmitBtn">
+              <span id="addSubmitLabel">Publish to Catalogue</span>
+              <svg id="addSubmitSpinner" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </button>
+            <button class="btn-ghost" id="addResetBtn">Clear Form</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /admin-body -->
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+      <span>DON ELCLASICO Admin Panel</span>
+      <span>© 2026 — All rights reserved</span>
+    </footer>
+  </div><!-- /admin-shell -->
+
+  <!-- ── EDIT DRAWER ── -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="editDrawer">
+    <div class="drawer-head">
+      <h3 class="drawer-title">Edit Item</h3>
+      <button class="drawer-close" id="drawerClose">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Item Name *</label>
+          <input type="text" id="editName" />
+        </div>
+        <div class="field full">
+          <label>Category *</label>
+          <select id="editCategory">
+            <option value="suit">Suits</option>
+            <option value="agbada">Agbada</option>
+            <option value="casual">Smart Casual</option>
+            <option value="native">Native Wear</option>
+            <option value="accessories">Accessories</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Price (₦) *</label>
+          <input type="number" id="editPrice" min="0" />
+        </div>
+        <div class="field full">
+          <label>Badge Label <span style="color:var(--text-muted);font-size:0.58rem;">(optional)</span></label>
+          <input type="text" id="editBadge" placeholder="e.g. New, Bestseller" />
+        </div>
+        <div class="field full">
+          <label>Sort Order</label>
+          <input type="number" id="editSort" min="0" />
+        </div>
+        <div class="field full">
+          <label>Status</label>
+          <select id="editActive">
+            <option value="true">Live</option>
+            <option value="false">Hidden</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Description</label>
+          <textarea id="editDesc" rows="3"></textarea>
+        </div>
+        <div class="field full">
+          <label>Features <span style="color:var(--text-muted);font-size:0.58rem;">(one per line)</span></label>
+          <textarea id="editFeatures" rows="4"></textarea>
+        </div>
+        <div class="field full">
+          <label>Replace Image <span style="color:var(--text-muted);font-size:0.58rem;">(optional)</span></label>
+          <div class="img-upload-zone" id="editUploadZone">
+            <input type="file" id="editImageFile" accept="image/*" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted);margin:0 auto;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p>Click to change image (leave blank to keep current)</p>
+          </div>
+          <div class="img-preview-wrap" id="editPreviewWrap"></div>
+          <div class="upload-progress" id="editUploadProgress">
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="editProgressFill"></div></div>
+            <span class="progress-label" id="editProgressLabel">Uploading…</span>
+          </div>
+          <div style="margin-top:0.75rem;">
+            <img id="editCurrentImg" src="" alt="" style="width:80px;height:80px;object-fit:cover;border:1px solid var(--border);display:none;" />
+            <p style="font-size:0.65rem;color:var(--text-muted);margin-top:0.35rem;" id="editCurrentImgLabel"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn-primary" style="width:auto;padding:0.8rem 2rem;" id="editSaveBtn">
+        <span id="editSaveLabel">Save Changes</span>
+        <svg id="editSaveSpinner" class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+      </button>
+      <button class="btn-ghost" id="editCancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ── CONFIRM DELETE MODAL ── -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+      <div class="confirm-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h3 class="confirm-title">Delete Item?</h3>
+      <p class="confirm-msg" id="confirmMsg">This will permanently remove the item from the catalogue. This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn-danger" id="confirmYes">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Delete
+        </button>
+        <button class="btn-ghost" id="confirmNo">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast">
+    <svg class="toast-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Done</span>
+  </div>
+
+<script>
+'use strict';
+
+/* ── SUPABASE ── */
+const SUPABASE_URL  = 'https://pavyadalbmcpedgspqqp.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdnlhZGFsYm1jcGVkZ3NwcXFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODMzNjQsImV4cCI6MjA5Mjk1OTM2NH0.pJydDWJUjjf2fSIlQPB6bonlvqhoGEEqPKxloQhHNiA';
+const CATALOGUE_TABLE  = 'don_elclasico_catalogue';
+const CATALOGUE_BUCKET = 'catalogue-images';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+const adminDb = createClient(SUPABASE_URL, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdnlhZGFsYm1jcGVkZ3NwcXFwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzM4MzM2NCwiZXhwIjoyMDkyOTU5MzY0fQ.fEBDEqix6jCHGZdwFlwmfrJ6PuGyiusDg3MT9Mx5I9A');
+
+/* ── CREDENTIALS (change these) ── */
+const ADMIN_USER = 'donelclasico';
+const ADMIN_PASS = 'password';
+
+/* ── THEME ── */
+const savedTheme = localStorage.getItem('de_theme');
+if (savedTheme === 'light') document.body.classList.add('light');
+
+function setupThemeToggle(btnId) {
+  document.getElementById(btnId).addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    localStorage.setItem('de_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+  });
+}
+setupThemeToggle('loginThemeToggle');
+setupThemeToggle('adminThemeToggle');
+
+/* ── SESSION ── */
+const SESSION_KEY = 'de_admin_session';
+function isLoggedIn() {
+  try {
+    const s = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    return s && s.valid === true;
+  } catch { return false; }
+}
+function setSession() { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ valid: true })); }
+function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
+
+/* ── SHOW/HIDE GATE ── */
+function showAdmin() {
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('adminShell').classList.add('visible');
+  loadCatalogue();
+}
+if (isLoggedIn()) showAdmin();
+
+/* ── LOGIN ── */
+document.getElementById('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  const btn   = document.getElementById('loginBtn');
+  const lbl   = document.getElementById('loginLabel');
+  const spin  = document.getElementById('loginSpinner');
+
+  errEl.classList.remove('show');
+  btn.disabled = true; lbl.textContent = 'Checking…'; spin.style.display = 'inline';
+
+  setTimeout(() => {
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      setSession();
+      showAdmin();
+    } else {
+      errEl.classList.add('show');
+      btn.disabled = false; lbl.textContent = 'Enter Portal'; spin.style.display = 'none';
+      document.getElementById('loginPass').value = '';
+    }
+  }, 600);
+});
+
+/* ── LOGOUT ── */
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  clearSession();
+  location.reload();
+});
+
+/* ── TABS ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  const icon = t.querySelector('.toast-icon');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + type;
+  icon.innerHTML = type === 'success'
+    ? '<polyline points="20 6 9 17 4 12"/>'
+    : '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ── CATALOGUE DATA ── */
+let allProducts = [];
+const CATEGORY_LABELS = { suit:'Suits', agbada:'Agbada', casual:'Smart Casual', native:'Native Wear', accessories:'Accessories' };
+
+async function loadCatalogue() {
+  document.getElementById('tableLoader').style.display = 'flex';
+  document.getElementById('productTable').style.display = 'none';
+  document.getElementById('tableEmpty').style.display = 'none';
+
+  const { data, error } = await db
+    .from(CATALOGUE_TABLE)
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  document.getElementById('tableLoader').style.display = 'none';
+
+  if (error) { showToast('Failed to load catalogue.', 'error'); return; }
+
+  allProducts = data || [];
+  updateStats();
+  renderTable();
+}
+
+function updateStats() {
+  const active = allProducts.filter(p => p.active).length;
+  const cats   = new Set(allProducts.map(p => p.category)).size;
+  document.getElementById('statTotal').textContent  = allProducts.length;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statHidden').textContent = allProducts.length - active;
+  document.getElementById('statCats').textContent   = cats;
+}
+
+function renderTable() {
+  const search  = document.getElementById('searchInput').value.toLowerCase();
+  const catFil  = document.getElementById('filterCat').value;
+  const statFil = document.getElementById('filterStatus').value;
+
+  let filtered = allProducts.filter(p => {
+    const matchName = p.name.toLowerCase().includes(search);
+    const matchCat  = catFil  === 'all' || p.category === catFil;
+    const matchStat = statFil === 'all' || (statFil === 'active' ? p.active : !p.active);
+    return matchName && matchCat && matchStat;
+  });
+
+  document.getElementById('itemsCount').textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length === 0) {
+    document.getElementById('productTable').style.display = 'none';
+    document.getElementById('tableEmpty').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('tableEmpty').style.display = 'none';
+  document.getElementById('productTable').style.display = 'table';
+
+  const tbody = document.getElementById('productTbody');
+  tbody.innerHTML = filtered.map(p => {
+    const safeId   = String(p.id);
+    const safeName = (p.name || '').replace(/"/g, '&quot;');
+    return `
+    <tr class="${p.active ? '' : 'inactive'}" data-id="${safeId}">
+      <td>
+        <img class="prod-thumb" src="${p.image_url || ''}" alt="${safeName}"
+          onerror="this.style.background='var(--mid)';this.removeAttribute('src')" />
+      </td>
+      <td>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-cat">${CATEGORY_LABELS[p.category] || p.category}</div>
+        ${p.badge ? `<span class="badge badge-label" style="margin-top:4px;">${p.badge}</span>` : ''}
+      </td>
+      <td style="font-size:0.78rem;">${CATEGORY_LABELS[p.category] || p.category}</td>
+      <td style="font-size:0.85rem;font-weight:500;">₦${Number(p.price).toLocaleString('en-NG')}</td>
+      <td style="font-size:0.8rem;color:var(--text-muted);">${p.sort_order ?? 0}</td>
+      <td>
+        <span class="badge ${p.active ? 'badge-active' : 'badge-inactive'}">
+          ${p.active ? 'Live' : 'Hidden'}
+        </span>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="act-btn" data-action="edit"   data-id="${safeId}">Edit</button>
+          <button class="act-btn" data-action="toggle" data-id="${safeId}" data-active="${p.active}">${p.active ? 'Hide' : 'Show'}</button>
+          <button class="act-btn del" data-action="delete" data-id="${safeId}" data-name="${safeName}">Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  /* Event delegation — avoids inline onclick + UUID string-escaping bugs */
+  tbody.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      const id     = btn.dataset.id;
+      if (action === 'edit')   openEdit(id);
+      if (action === 'toggle') toggleActive(id, btn.dataset.active === 'true');
+      if (action === 'delete') confirmDelete(id, btn.dataset.name);
+    });
+  });
+}
+
+/* Filters */
+document.getElementById('searchInput').addEventListener('input', renderTable);
+document.getElementById('filterCat').addEventListener('change', renderTable);
+document.getElementById('filterStatus').addEventListener('change', renderTable);
+document.getElementById('refreshBtn').addEventListener('click', loadCatalogue);
+
+/* ── TOGGLE ACTIVE ── */
+async function toggleActive(id, current) {
+  const { error } = await adminDb.from(CATALOGUE_TABLE).update({ active: !current }).eq('id', id);
+  if (error) { showToast('Update failed.', 'error'); return; }
+  const p = allProducts.find(x => String(x.id) === String(id));
+  if (p) p.active = !current;
+  updateStats(); renderTable();
+  showToast(current ? 'Item hidden from catalogue.' : 'Item is now live!');
+}
+
+/* ── DELETE ── */
+let pendingDeleteId = null;
+function confirmDelete(id, name) {
+  pendingDeleteId = id;
+  document.getElementById('confirmMsg').textContent =
+    `"${name}" will be permanently removed from the catalogue. This cannot be undone.`;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+document.getElementById('confirmNo').addEventListener('click', () => {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  pendingDeleteId = null;
+});
+document.getElementById('confirmOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('confirmOverlay')) {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    pendingDeleteId = null;
+  }
+});
+document.getElementById('confirmYes').addEventListener('click', async () => {
+  if (!pendingDeleteId) return;
+  const { error } = await adminDb.from(CATALOGUE_TABLE).delete().eq('id', pendingDeleteId);
+  document.getElementById('confirmOverlay').classList.remove('open');
+  if (error) { showToast('Delete failed.', 'error'); return; }
+  allProducts = allProducts.filter(p => String(p.id) !== String(pendingDeleteId));
+  pendingDeleteId = null;
+  updateStats(); renderTable();
+  showToast('Item deleted.');
+});
+
+/* ── EDIT DRAWER ── */
+let editingId = null;
+let editNewImageUrl = null;
+
+function openEdit(id) {
+  const p = allProducts.find(x => String(x.id) === String(id));
+  if (!p) return;
+  editingId = id;
+  editNewImageUrl = null;
+
+  document.getElementById('editName').value     = p.name || '';
+  document.getElementById('editCategory').value = p.category || 'suit';
+  document.getElementById('editPrice').value    = p.price || '';
+  document.getElementById('editBadge').value    = p.badge || '';
+  document.getElementById('editSort').value     = p.sort_order ?? 0;
+  document.getElementById('editActive').value   = String(p.active !== false);
+  document.getElementById('editDesc').value     = p.description || '';
+  document.getElementById('editFeatures').value = Array.isArray(p.features)
+    ? p.features.join('\n')
+    : (p.features || '');
+
+  const imgEl   = document.getElementById('editCurrentImg');
+  const imgLbl  = document.getElementById('editCurrentImgLabel');
+  if (p.image_url) {
+    imgEl.src = p.image_url; imgEl.style.display = 'block';
+    imgLbl.textContent = 'Current image';
+  } else { imgEl.style.display = 'none'; imgLbl.textContent = ''; }
+
+  document.getElementById('editPreviewWrap').innerHTML = '';
+  document.getElementById('editImageFile').value = '';
+  document.getElementById('editUploadProgress').classList.remove('show');
+
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('editDrawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('editDrawer').classList.remove('open');
+  editingId = null; editNewImageUrl = null;
+}
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('editCancelBtn').addEventListener('click', closeDrawer);
+document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+
+/* Edit image preview */
+document.getElementById('editImageFile').addEventListener('change', function() {
+  const prev = document.getElementById('editPreviewWrap');
+  prev.innerHTML = '';
+  if (this.files[0]) {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(this.files[0]);
+    img.className = 'img-preview';
+    prev.appendChild(img);
+  }
+});
+
+/* Save edits */
+document.getElementById('editSaveBtn').addEventListener('click', async () => {
+  if (!editingId) return;
+  const btn   = document.getElementById('editSaveBtn');
+  const lbl   = document.getElementById('editSaveLabel');
+  const spin  = document.getElementById('editSaveSpinner');
+  btn.disabled = true; lbl.textContent = 'Saving…'; spin.style.display = 'inline';
+
+  try {
+    let image_url = allProducts.find(p => String(p.id) === String(editingId))?.image_url || null;
+
+    const file = document.getElementById('editImageFile').files[0];
+    if (file) {
+      image_url = await uploadImage(file, 'editProgressFill', 'editProgressLabel', 'editUploadProgress');
+      if (!image_url) throw new Error('Image upload failed.');
+    }
+
+    const features = document.getElementById('editFeatures').value
+      .split('\n').map(s => s.trim()).filter(Boolean);
+
+    const payload = {
+      name:        document.getElementById('editName').value.trim(),
+      category:    document.getElementById('editCategory').value,
+      price:       parseFloat(document.getElementById('editPrice').value) || 0,
+      badge:       document.getElementById('editBadge').value.trim() || null,
+      sort_order:  parseInt(document.getElementById('editSort').value) || 0,
+      active:      document.getElementById('editActive').value === 'true',
+      description: document.getElementById('editDesc').value.trim(),
+      features:    features,
+      image_url,
+    };
+
+    const { error } = await adminDb.from(CATALOGUE_TABLE).update(payload).eq('id', editingId);
+    if (error) throw new Error(error.message);
+
+    const idx = allProducts.findIndex(p => String(p.id) === String(editingId));
+    if (idx !== -1) allProducts[idx] = { ...allProducts[idx], ...payload };
+
+    closeDrawer(); updateStats(); renderTable();
+    showToast('Item updated successfully.');
+  } catch (err) {
+    showToast(err.message || 'Save failed.', 'error');
+  } finally {
+    btn.disabled = false; lbl.textContent = 'Save Changes'; spin.style.display = 'none';
+  }
+});
+
+/* ── IMAGE UPLOAD UTIL ── */
+async function uploadImage(file, fillId, labelId, progressId) {
+  document.getElementById(progressId).classList.add('show');
+  document.getElementById(fillId).style.width = '0%';
+  document.getElementById(labelId).textContent = 'Uploading image…';
+
+  const ext      = file.name.split('.').pop();
+  const filename = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  const path     = `uploads/${filename}`;
+
+  document.getElementById(fillId).style.width = '40%';
+
+  const { error } = await adminDb.storage
+    .from(CATALOGUE_BUCKET)
+    .upload(path, file, { cacheControl: '3600', upsert: true });
+
+  if (error) {
+    document.getElementById(progressId).classList.remove('show');
+    showToast('Image upload failed: ' + (error.message || 'Storage error'), 'error');
+    return null;
+  }
+
+  document.getElementById(fillId).style.width = '100%';
+  document.getElementById(labelId).textContent = 'Upload complete.';
+
+  const { data } = adminDb.storage.from(CATALOGUE_BUCKET).getPublicUrl(path);
+  return data?.publicUrl || null;
+}
+
+/* ── ADD NEW ITEM ── */
+let addImageUrl = null;
+
+/* Drag & drop */
+const addZone = document.getElementById('addUploadZone');
+addZone.addEventListener('dragover', e => { e.preventDefault(); addZone.classList.add('dragging'); });
+addZone.addEventListener('dragleave', () => addZone.classList.remove('dragging'));
+addZone.addEventListener('drop', e => {
+  e.preventDefault(); addZone.classList.remove('dragging');
+  const files = e.dataTransfer.files;
+  if (files[0]) {
+    document.getElementById('addImageFile').files = files; // won't work cross-browser in all cases
+    handleAddPreview(files[0]);
+  }
+});
+
+document.getElementById('addImageFile').addEventListener('change', function() {
+  if (this.files[0]) handleAddPreview(this.files[0]);
+});
+
+function handleAddPreview(file) {
+  const wrap = document.getElementById('addPreviewWrap');
+  wrap.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  img.className = 'img-preview';
+  wrap.appendChild(img);
+  addImageUrl = null;
+  document.getElementById('addImageUrlDisplay').style.display = 'none';
+}
+
+document.getElementById('addSubmitBtn').addEventListener('click', async () => {
+  const name     = document.getElementById('addName').value.trim();
+  const category = document.getElementById('addCategory').value;
+  const price    = parseFloat(document.getElementById('addPrice').value);
+  const file     = document.getElementById('addImageFile').files[0];
+
+  if (!name || !category || isNaN(price) || !file) {
+    showToast('Please fill in Name, Category, Price and upload an Image.', 'error');
+    return;
+  }
+
+  const btn  = document.getElementById('addSubmitBtn');
+  const lbl  = document.getElementById('addSubmitLabel');
+  const spin = document.getElementById('addSubmitSpinner');
+  btn.disabled = true; lbl.textContent = 'Publishing…'; spin.style.display = 'inline';
+
+  try {
+    addImageUrl = await uploadImage(file, 'addProgressFill', 'addProgressLabel', 'addUploadProgress');
+    if (!addImageUrl) throw new Error('Image upload failed. Please try again.');
+
+    document.getElementById('addImageUrlDisplay').textContent = addImageUrl;
+    document.getElementById('addImageUrlDisplay').style.display = 'block';
+
+    const features = document.getElementById('addFeatures').value
+      .split('\n').map(s => s.trim()).filter(Boolean);
+
+    const payload = {
+      name,
+      category,
+      price,
+      badge:       document.getElementById('addBadge').value.trim() || null,
+      sort_order:  parseInt(document.getElementById('addSort').value) || 0,
+      active:      document.getElementById('addActive').value === 'true',
+      description: document.getElementById('addDesc').value.trim(),
+      features,
+      image_url:   addImageUrl,
+    };
+
+    const { data, error } = await adminDb.from(CATALOGUE_TABLE).insert([payload]).select();
+    if (error) throw new Error(error.message);
+
+    if (data && data[0]) allProducts.unshift(data[0]);
+    updateStats();
+
+    showToast(`"${name}" published to catalogue!`);
+    resetAddForm();
+
+    /* Switch to catalogue tab */
+    document.querySelector('[data-tab="catalogue"]').click();
+
+  } catch (err) {
+    showToast(err.message || 'Publish failed.', 'error');
+  } finally {
+    btn.disabled = false; lbl.textContent = 'Publish to Catalogue'; spin.style.display = 'none';
+  }
+});
+
+document.getElementById('addResetBtn').addEventListener('click', resetAddForm);
+
+function resetAddForm() {
+  ['addName','addBadge','addDesc','addFeatures'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('addCategory').value = '';
+  document.getElementById('addPrice').value = '';
+  document.getElementById('addSort').value = '0';
+  document.getElementById('addActive').value = 'true';
+  document.getElementById('addImageFile').value = '';
+  document.getElementById('addPreviewWrap').innerHTML = '';
+  document.getElementById('addImageUrlDisplay').style.display = 'none';
+  document.getElementById('addUploadProgress').classList.remove('show');
+  addImageUrl = null;
+}
+
+/* ── LIGHT MODE NAV SYNC ── */
+const loginNav = document.getElementById('loginNav');
+function syncLoginNav() {
+  if (document.body.classList.contains('light')) {
+    loginNav.style.background = 'rgba(244,241,236,0.96)';
+  } else {
+    loginNav.style.background = 'rgba(8,8,8,0.96)';
+  }
+}
+document.getElementById('loginThemeToggle').addEventListener('click', syncLoginNav);
+document.getElementById('adminThemeToggle').addEventListener('click', syncLoginNav);
+syncLoginNav();
+</script>
+</body>
+</html>

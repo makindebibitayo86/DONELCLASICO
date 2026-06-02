@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DON ELCLASICO — Atelier for Men</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Barlow:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-inner">
+      <span class="loader-brand">DON ELCLASICO</span>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+      <span class="loader-sub">ATELIER FOR MEN</span>
+    </div>
+  </div>
+
+  <!-- CURSOR -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <svg class="nav-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M 745.837,613.206 L 745.837,627.847 L 744.976,640.766 L 744.115,650.239 L 743.254,658.852 L 742.392,665.742 L 741.531,672.632 L 740.670,678.660 L 739.809,684.689 L 738.947,689.856 L 737.225,699.330 L 734.641,712.249 L 732.919,720.000 L 729.474,733.780 L 726.890,743.254 L 724.306,751.866 L 718.278,769.952 L 715.694,776.842 L 710.526,789.761 L 707.943,795.789 L 702.775,806.986 L 701.053,810.431 L 698.469,815.598 L 695.024,821.627 L 691.579,827.656 L 688.995,831.962 L 682.105,842.297 L 677.799,848.325 L 671.770,856.077 L 665.742,862.967 L 651.100,877.608 L 645.072,882.775 L 641.627,885.359 L 638.182,887.943 L 630.431,893.110 L 626.124,895.694 L 621.818,898.278 L 618.373,900.000 L 613.206,902.584 L 605.455,906.029 L 598.565,908.612 L 595.981,909.474 L 593.397,910.335 L 584.785,912.919 L 581.340,913.780 L 577.895,914.641 L 573.589,915.502 L 569.282,916.364 L 564.115,917.225 L 558.947,918.086 L 551.196,918.947 L 540.861,919.809 L 528.804,919.809 L 522.775,918.947 L 518.469,918.086 L 515.885,917.225 L 513.301,916.364 L 508.134,913.780 L 505.550,912.057 L 502.967,910.335 L 496.077,903.445 L 494.354,900.861 L 492.632,898.278 L 490.048,893.110 L 487.464,885.359 L 486.603,881.053 L 485.742,874.163 L 485.742,816.459 L 348.804,817.321 L 348.804,873.301 L 347.943,879.330 L 347.081,882.775 L 346.220,886.220 L 345.359,888.804 L 344.498,891.388 L 341.914,896.555 L 340.191,899.139 L 338.469,901.722 L 330.718,909.474 L 328.134,911.196 L 323.828,913.780 L 322.105,914.641 L 317.799,916.364 L 315.215,917.225 L 311.770,918.086 L 308.325,918.947 L 304.019,919.809 L 298.852,920.670 L 291.100,921.531 L 277.321,922.392 L 257.512,922.392 L 255.789,924.115 L 256.651,970.622 L 617.512,970.622 L 627.847,969.761 L 634.737,968.900 L 639.904,968.038 L 644.211,967.177 L 648.517,966.316 L 658.852,963.732 L 667.464,961.148 L 670.048,960.287 L 679.522,956.842 L 685.550,954.258 L 691.579,951.675 L 703.636,945.646 L 713.971,939.617 L 720.861,935.311 L 723.445,932.727 L 726.029,931.866 L 728.612,930.144 L 738.947,922.392 L 743.254,918.947 L 754.450,909.474 L 780.287,883.636 L 786.316,876.746 L 796.651,863.828 L 800.096,859.522 L 806.986,850.048 L 813.014,841.435 L 814.737,838.852 L 822.488,826.794 L 826.794,819.904 L 830.239,813.876 L 833.684,807.847 L 840.574,794.928 L 843.158,789.761 L 850.909,773.397 L 854.354,765.646 L 856.077,761.340 L 857.799,757.033 L 862.105,745.837 L 864.689,738.947 L 870.718,720.861 L 873.301,712.249 L 875.024,706.220 L 876.746,700.191 L 879.330,689.856 L 881.914,678.660 L 882.775,674.354 L 885.359,658.852 L 886.220,652.823 L 887.081,646.794 L 887.943,638.182 L 888.804,629.569 L 888.804,612.344 Z M 254.067,110.239 L 254.067,154.163 L 255.789,155.885 L 278.182,155.885 L 289.378,156.746 L 296.268,157.608 L 301.435,158.469 L 304.880,159.330 L 308.325,160.191 L 310.909,161.053 L 316.938,163.636 L 318.660,164.498 L 322.967,167.081 L 326.411,169.665 L 333.301,176.555 L 336.746,180.861 L 338.469,183.445 L 339.330,185.167 L 341.914,191.196 L 342.775,193.780 L 343.636,196.364 L 344.498,200.670 L 345.359,205.837 L 346.220,219.617 L 346.220,303.158 L 344.498,306.603 L 84.402,306.603 L 82.679,308.325 L 82.679,348.804 L 84.402,350.526 L 95.598,350.526 L 103.349,351.388 L 108.517,352.249 L 112.823,353.110 L 115.407,353.971 L 119.713,355.694 L 123.158,357.416 L 128.325,360.000 L 130.909,361.722 L 139.522,370.335 L 142.105,373.780 L 145.550,380.670 L 148.134,388.421 L 148.995,391.866 L 149.856,396.172 L 150.718,403.062 L 150.718,690.718 L 149.856,696.746 L 148.995,700.191 L 148.134,703.636 L 147.273,706.220 L 145.550,710.526 L 144.689,712.249 L 143.828,713.971 L 142.105,716.555 L 140.383,719.139 L 136.938,723.445 L 135.215,725.167 L 130.909,728.612 L 128.325,730.335 L 125.742,732.057 L 124.019,732.919 L 119.713,734.641 L 117.129,735.502 L 114.545,736.364 L 111.100,737.225 L 105.933,738.086 L 99.904,738.947 L 85.263,738.947 L 83.541,739.809 L 83.541,779.426 L 674.354,779.426 L 676.077,777.703 L 676.938,775.120 L 678.660,770.813 L 681.244,763.062 L 685.550,750.144 L 688.134,740.670 L 688.995,737.225 L 689.856,732.919 L 688.995,730.335 L 486.603,729.474 L 486.603,404.785 L 349.665,404.785 L 348.804,730.335 L 309.187,731.196 L 288.517,731.196 L 279.043,730.335 L 275.598,729.474 L 270.431,726.890 L 266.986,723.445 L 266.124,723.445 L 263.541,720.861 L 260.957,717.416 L 259.234,713.971 L 256.651,708.804 L 255.789,706.220 L 254.928,703.636 L 254.067,699.330 L 253.206,693.301 L 252.344,681.244 L 253.206,565.837 L 309.187,565.837 L 309.187,519.330 L 254.067,519.330 L 252.344,517.608 L 252.344,360.861 L 254.067,359.139 L 686.411,359.139 L 685.550,306.603 L 485.742,305.742 L 485.742,192.919 L 486.603,188.612 L 487.464,184.306 L 490.909,177.416 L 493.493,173.971 L 496.077,171.388 L 499.522,168.804 L 504.689,166.220 L 507.273,165.359 L 510.718,164.498 L 589.091,164.498 L 595.981,165.359 L 601.148,166.220 L 611.483,168.804 L 621.818,172.249 L 626.124,173.971 L 637.321,179.139 L 641.627,181.722 L 650.239,186.890 L 656.268,191.196 L 659.713,193.780 L 664.880,198.086 L 673.493,205.837 L 679.522,211.866 L 679.522,212.727 L 686.411,219.617 L 690.718,224.785 L 698.469,235.120 L 703.636,242.871 L 707.943,249.761 L 710.526,254.067 L 714.833,261.818 L 717.416,266.986 L 721.722,275.598 L 726.029,285.072 L 728.612,291.100 L 730.335,295.407 L 732.057,299.713 L 734.641,306.603 L 738.947,318.660 L 742.392,329.856 L 747.560,347.943 L 748.421,351.388 L 751.005,362.584 L 752.727,370.335 L 753.589,374.641 L 756.172,390.144 L 757.033,396.172 L 757.895,402.201 L 758.756,409.091 L 759.617,416.842 L 760.478,427.177 L 761.340,440.957 L 761.340,484.019 L 760.478,498.660 L 759.617,508.995 L 758.756,515.885 L 757.033,517.608 L 522.775,518.469 L 522.775,521.914 L 523.636,522.775 L 523.636,526.220 L 522.775,543.445 L 523.636,567.560 L 567.560,567.560 L 568.421,568.421 L 702.775,569.282 L 846.603,569.282 L 890.526,570.144 L 896.555,571.005 L 900.000,571.866 L 906.029,573.589 L 910.335,575.311 L 915.502,577.895 L 918.086,579.617 L 920.670,581.340 L 924.976,584.785 L 930.144,589.952 L 932.727,593.397 L 934.450,595.981 L 937.895,602.010 L 939.617,606.316 L 940.478,608.900 L 941.340,611.483 L 942.201,614.928 L 943.062,618.373 L 943.923,623.541 L 944.785,633.876 L 943.923,650.239 L 943.923,663.158 L 996.459,663.158 L 995.598,432.344 L 943.923,433.206 L 943.923,439.234 L 944.785,454.737 L 943.923,465.933 L 943.062,471.100 L 942.201,474.545 L 941.340,477.990 L 940.478,480.574 L 939.617,483.158 L 937.895,486.603 L 935.311,491.770 L 933.589,494.354 L 931.005,497.799 L 923.254,505.550 L 915.502,510.718 L 913.780,511.579 L 912.057,512.440 L 904.306,515.024 L 900.861,515.885 L 896.555,515.024 L 896.555,453.876 L 895.694,440.096 L 894.833,429.761 L 893.971,422.010 L 893.110,414.258 L 892.249,407.368 L 891.388,401.340 L 889.665,390.144 L 887.943,380.670 L 884.498,363.445 L 881.914,352.249 L 881.053,348.804 L 878.469,339.330 L 876.746,333.301 L 870.718,315.215 L 867.273,305.742 L 861.244,291.100 L 856.077,279.904 L 853.493,274.737 L 849.187,266.124 L 844.880,258.373 L 841.435,252.344 L 838.852,248.038 L 834.545,241.148 L 831.100,235.981 L 825.933,228.230 L 821.627,222.201 L 813.876,211.866 L 810.431,207.560 L 806.124,202.392 L 800.957,196.364 L 776.842,172.249 L 770.813,167.081 L 766.507,163.636 L 762.201,160.191 L 751.866,152.440 L 741.531,145.550 L 734.641,141.244 L 728.612,137.799 L 721.722,134.354 L 709.665,128.325 L 701.914,124.880 L 695.024,122.297 L 689.856,120.574 L 682.105,117.990 L 676.077,116.268 L 662.297,112.823 L 652.823,111.100 L 646.794,110.239 L 638.182,109.378 Z"/></svg>
+        <span class="nav-logo-text">DON ELCLASICO</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#home" class="nav-link">Home</a></li>
+        <li><a href="#catalogue" class="nav-link">Catalogue</a></li>
+        <li><a href="#measurements" class="nav-link">Measurements</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartBtn" aria-label="Cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+              <svg class="icon-sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <svg class="icon-moon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+          </span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home" class="mob-link">Home</a>
+      <a href="#catalogue" class="mob-link">Catalogue</a>
+      <a href="#measurements" class="mob-link">Measurements</a>
+      <a href="#contact" class="mob-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ======= HERO ======= -->
+  <section id="home" class="hero">
+    <div class="hero-bg">
+      <div class="hero-grain"></div>
+      <div class="hero-gradient"></div>
+      <div class="hero-lines"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal-up">— Atelier Collection 2026 —</p>
+      <h1 class="hero-title reveal-up delay-1">
+        <span class="hero-title-line">Forged</span>
+        <span class="hero-title-line italic">in Precision,</span>
+        <span class="hero-title-line">Worn</span>
+        <span class="hero-title-line italic">with Authority.</span>
+      </h1>
+      <p class="hero-sub reveal-up delay-2">Where structured elegance meets the unyielding spirit of the modern man.</p>
+      <div class="hero-ctas reveal-up delay-3">
+        <a href="#catalogue" class="btn-primary">Explore Collection</a>
+        <a href="#measurements" class="btn-ghost">Book Consultation</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+    <div class="hero-marquee">
+      <div class="marquee-track">
+        <span>BESPOKE TAILORING</span><span class="dot">◆</span>
+        <span>MENSWEAR ATELIER</span><span class="dot">◆</span>
+        <span>LUXURY READY-TO-WEAR</span><span class="dot">◆</span>
+        <span>ATELIER LAGOS</span><span class="dot">◆</span>
+        <span>BESPOKE TAILORING</span><span class="dot">◆</span>
+        <span>MENSWEAR ATELIER</span><span class="dot">◆</span>
+        <span>LUXURY READY-TO-WEAR</span><span class="dot">◆</span>
+        <span>ATELIER LAGOS</span><span class="dot">◆</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= PHILOSOPHY ======= -->
+  <section class="philosophy">
+    <div class="phil-container">
+      <div class="phil-text reveal-up">
+        <span class="section-label">Our Standard</span>
+        <h2>Built for men who<br/><em>define the room</em></h2>
+        <p>At DON ELCLASICO, every seam is a declaration. We engineer garments that carry weight — the kind of construction that commands respect before a word is spoken. African craft heritage, executed with architectural precision.</p>
+      </div>
+      <div class="phil-stats reveal-up delay-1">
+        <div class="stat"><span class="stat-num">12+</span><span class="stat-label">Years of Mastery</span></div>
+        <div class="stat"><span class="stat-num">3K+</span><span class="stat-label">Men Outfitted</span></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Bespoke Built</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CATALOGUE ======= -->
+  <section id="catalogue" class="catalogue">
+    <div class="section-header reveal-up">
+      <span class="section-label">The Collection</span>
+      <h2>Our Designs</h2>
+      <p>Each piece is an argument for excellence — constructed, not assembled.</p>
+    </div>
+    <div class="catalogue-filters reveal-up delay-1">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="suit">Suits</button>
+      <button class="filter-btn" data-filter="agbada">Agbada</button>
+      <button class="filter-btn" data-filter="casual">Smart Casual</button>
+      <button class="filter-btn" data-filter="native">Native Wear</button>
+      <button class="filter-btn" data-filter="accessories">Accessories</button>
+    </div>
+    <div class="catalogue-grid" id="catalogueGrid"></div>
+  </section>
+
+  <!-- ======= MEASUREMENTS ======= -->
+  <section id="measurements" class="measurements">
+    <div class="measurements-bg"></div>
+    <div class="measurements-container">
+      <div class="meas-intro reveal-up">
+        <span class="section-label">Bespoke Service</span>
+        <h2>Your Exact<br/><em>Fit. Your Terms.</em></h2>
+        <p>Submit your measurements and we engineer a garment built precisely to your frame. No approximations. No compromises. Just structure that moves with you.</p>
+      </div>
+      <form class="measurement-form reveal-up delay-1" id="measurementForm" novalidate>
+
+        <div class="form-section-title">Personal Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="fullName" placeholder=" " required />
+            <label for="fullName">Full Name *</label>
+            <span class="form-error" id="nameError"></span>
+          </div>
+          <div class="form-group">
+            <input type="tel" id="phone" placeholder=" " required />
+            <label for="phone">Phone Number *</label>
+            <span class="form-error" id="phoneError"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <input type="email" id="email" placeholder=" " />
+            <label for="email">Email Address</label>
+            <span class="form-error" id="emailError"></span>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-section-title">Body Measurements <span class="unit-hint">(in centimetres)</span></div>
+        <div class="form-row meas-row">
+          <div class="form-group">
+            <input type="number" id="chest" placeholder=" " min="1" />
+            <label for="chest">Chest</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="waist" placeholder=" " min="1" />
+            <label for="waist">Waist</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="hips" placeholder=" " min="1" />
+            <label for="hips">Seat</label>
+          </div>
+        </div>
+        <div class="form-row meas-row">
+          <div class="form-group">
+            <input type="number" id="height" placeholder=" " min="1" />
+            <label for="height">Height</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="inseam" placeholder=" " min="1" />
+            <label for="inseam">Inseam Length</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="shoulder" placeholder=" " min="1" />
+            <label for="shoulder">Shoulder Width</label>
+          </div>
+        </div>
+        <div class="form-row meas-row">
+          <div class="form-group">
+            <input type="number" id="sleeve" placeholder=" " min="1" />
+            <label for="sleeve">Sleeve Length</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="neck" placeholder=" " min="1" />
+            <label for="neck">Neck Circumference</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="thigh" placeholder=" " min="1" />
+            <label for="thigh">Thigh</label>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-section-title">Additional Details</div>
+        <div class="form-group full">
+          <textarea id="instructions" placeholder=" " rows="4"></textarea>
+          <label for="instructions">Special Instructions / Design Notes</label>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="file-upload-area" id="uploadArea">
+          <input type="file" id="inspirationUpload" accept="image/*" multiple />
+          <div class="upload-inner">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p>Upload reference images or fabric swatches</p>
+            <span>PNG, JPG, WEBP up to 10MB each</span>
+          </div>
+          <div class="upload-preview" id="uploadPreview"></div>
+        </div>
+
+        <!-- Upload Progress -->
+        <div class="upload-progress" id="uploadProgress" style="display:none;">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <span class="progress-label" id="progressLabel">Uploading images…</span>
+        </div>
+
+        <button type="submit" class="btn-primary full-width" id="submitBtn">
+          <span id="submitLabel">Submit My Measurements</span>
+          <svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <svg id="submitSpinner" class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"/></svg>
+        </button>
+
+        <!-- Inline success message -->
+        <div class="form-success" id="formSuccess" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Measurements received. We'll be in touch shortly.</span>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ======= CONTACT ======= -->
+  <section id="contact" class="contact">
+    <div class="contact-inner">
+      <div class="contact-text reveal-up">
+        <span class="section-label">Get In Touch</span>
+        <h2>Let's Build<br/><em>Your Standard</em></h2>
+        <p>Ready to be outfitted to the highest standard? Reach out and let's begin your bespoke commission.</p>
+      </div>
+      <div class="contact-channels reveal-up delay-1">
+        <a href="https://wa.me/2348068161932" class="contact-card whatsapp" target="_blank">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.113.548 4.1 1.508 5.83L0 24l6.335-1.647A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.823 9.823 0 01-5.006-1.366l-.36-.214-3.73.97.997-3.63-.235-.374A9.812 9.812 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+          </div>
+          <div class="cc-text">
+            <span class="cc-label">WhatsApp Us</span>
+            <span class="cc-detail">Quick response guaranteed</span>
+          </div>
+          <svg class="cc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="https://instagram.com/Don_elclasico" class="contact-card instagram" target="_blank">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div class="cc-text">
+            <span class="cc-label">Follow on Instagram</span>
+            <span class="cc-detail">@Don_elclasico</span>
+          </div>
+          <svg class="cc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="mailto:ibrahimayodeji188@gmail.com" class="contact-card email">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="cc-text">
+            <span class="cc-label">Email Us</span>
+            <span class="cc-detail">ibrahimayodeji188@gmail.com</span>
+          </div>
+          <svg class="cc-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg class="footer-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M 745.837,613.206 L 745.837,627.847 L 744.976,640.766 L 744.115,650.239 L 743.254,658.852 L 742.392,665.742 L 741.531,672.632 L 740.670,678.660 L 739.809,684.689 L 738.947,689.856 L 737.225,699.330 L 734.641,712.249 L 732.919,720.000 L 729.474,733.780 L 726.890,743.254 L 724.306,751.866 L 718.278,769.952 L 715.694,776.842 L 710.526,789.761 L 707.943,795.789 L 702.775,806.986 L 701.053,810.431 L 698.469,815.598 L 695.024,821.627 L 691.579,827.656 L 688.995,831.962 L 682.105,842.297 L 677.799,848.325 L 671.770,856.077 L 665.742,862.967 L 651.100,877.608 L 645.072,882.775 L 641.627,885.359 L 638.182,887.943 L 630.431,893.110 L 626.124,895.694 L 621.818,898.278 L 618.373,900.000 L 613.206,902.584 L 605.455,906.029 L 598.565,908.612 L 595.981,909.474 L 593.397,910.335 L 584.785,912.919 L 581.340,913.780 L 577.895,914.641 L 573.589,915.502 L 569.282,916.364 L 564.115,917.225 L 558.947,918.086 L 551.196,918.947 L 540.861,919.809 L 528.804,919.809 L 522.775,918.947 L 518.469,918.086 L 515.885,917.225 L 513.301,916.364 L 508.134,913.780 L 505.550,912.057 L 502.967,910.335 L 496.077,903.445 L 494.354,900.861 L 492.632,898.278 L 490.048,893.110 L 487.464,885.359 L 486.603,881.053 L 485.742,874.163 L 485.742,816.459 L 348.804,817.321 L 348.804,873.301 L 347.943,879.330 L 347.081,882.775 L 346.220,886.220 L 345.359,888.804 L 344.498,891.388 L 341.914,896.555 L 340.191,899.139 L 338.469,901.722 L 330.718,909.474 L 328.134,911.196 L 323.828,913.780 L 322.105,914.641 L 317.799,916.364 L 315.215,917.225 L 311.770,918.086 L 308.325,918.947 L 304.019,919.809 L 298.852,920.670 L 291.100,921.531 L 277.321,922.392 L 257.512,922.392 L 255.789,924.115 L 256.651,970.622 L 617.512,970.622 L 627.847,969.761 L 634.737,968.900 L 639.904,968.038 L 644.211,967.177 L 648.517,966.316 L 658.852,963.732 L 667.464,961.148 L 670.048,960.287 L 679.522,956.842 L 685.550,954.258 L 691.579,951.675 L 703.636,945.646 L 713.971,939.617 L 720.861,935.311 L 723.445,932.727 L 726.029,931.866 L 728.612,930.144 L 738.947,922.392 L 743.254,918.947 L 754.450,909.474 L 780.287,883.636 L 786.316,876.746 L 796.651,863.828 L 800.096,859.522 L 806.986,850.048 L 813.014,841.435 L 814.737,838.852 L 822.488,826.794 L 826.794,819.904 L 830.239,813.876 L 833.684,807.847 L 840.574,794.928 L 843.158,789.761 L 850.909,773.397 L 854.354,765.646 L 856.077,761.340 L 857.799,757.033 L 862.105,745.837 L 864.689,738.947 L 870.718,720.861 L 873.301,712.249 L 875.024,706.220 L 876.746,700.191 L 879.330,689.856 L 881.914,678.660 L 882.775,674.354 L 885.359,658.852 L 886.220,652.823 L 887.081,646.794 L 887.943,638.182 L 888.804,629.569 L 888.804,612.344 Z M 254.067,110.239 L 254.067,154.163 L 255.789,155.885 L 278.182,155.885 L 289.378,156.746 L 296.268,157.608 L 301.435,158.469 L 304.880,159.330 L 308.325,160.191 L 310.909,161.053 L 316.938,163.636 L 318.660,164.498 L 322.967,167.081 L 326.411,169.665 L 333.301,176.555 L 336.746,180.861 L 338.469,183.445 L 339.330,185.167 L 341.914,191.196 L 342.775,193.780 L 343.636,196.364 L 344.498,200.670 L 345.359,205.837 L 346.220,219.617 L 346.220,303.158 L 344.498,306.603 L 84.402,306.603 L 82.679,308.325 L 82.679,348.804 L 84.402,350.526 L 95.598,350.526 L 103.349,351.388 L 108.517,352.249 L 112.823,353.110 L 115.407,353.971 L 119.713,355.694 L 123.158,357.416 L 128.325,360.000 L 130.909,361.722 L 139.522,370.335 L 142.105,373.780 L 145.550,380.670 L 148.134,388.421 L 148.995,391.866 L 149.856,396.172 L 150.718,403.062 L 150.718,690.718 L 149.856,696.746 L 148.995,700.191 L 148.134,703.636 L 147.273,706.220 L 145.550,710.526 L 144.689,712.249 L 143.828,713.971 L 142.105,716.555 L 140.383,719.139 L 136.938,723.445 L 135.215,725.167 L 130.909,728.612 L 128.325,730.335 L 125.742,732.057 L 124.019,732.919 L 119.713,734.641 L 117.129,735.502 L 114.545,736.364 L 111.100,737.225 L 105.933,738.086 L 99.904,738.947 L 85.263,738.947 L 83.541,739.809 L 83.541,779.426 L 674.354,779.426 L 676.077,777.703 L 676.938,775.120 L 678.660,770.813 L 681.244,763.062 L 685.550,750.144 L 688.134,740.670 L 688.995,737.225 L 689.856,732.919 L 688.995,730.335 L 486.603,729.474 L 486.603,404.785 L 349.665,404.785 L 348.804,730.335 L 309.187,731.196 L 288.517,731.196 L 279.043,730.335 L 275.598,729.474 L 270.431,726.890 L 266.986,723.445 L 266.124,723.445 L 263.541,720.861 L 260.957,717.416 L 259.234,713.971 L 256.651,708.804 L 255.789,706.220 L 254.928,703.636 L 254.067,699.330 L 253.206,693.301 L 252.344,681.244 L 253.206,565.837 L 309.187,565.837 L 309.187,519.330 L 254.067,519.330 L 252.344,517.608 L 252.344,360.861 L 254.067,359.139 L 686.411,359.139 L 685.550,306.603 L 485.742,305.742 L 485.742,192.919 L 486.603,188.612 L 487.464,184.306 L 490.909,177.416 L 493.493,173.971 L 496.077,171.388 L 499.522,168.804 L 504.689,166.220 L 507.273,165.359 L 510.718,164.498 L 589.091,164.498 L 595.981,165.359 L 601.148,166.220 L 611.483,168.804 L 621.818,172.249 L 626.124,173.971 L 637.321,179.139 L 641.627,181.722 L 650.239,186.890 L 656.268,191.196 L 659.713,193.780 L 664.880,198.086 L 673.493,205.837 L 679.522,211.866 L 679.522,212.727 L 686.411,219.617 L 690.718,224.785 L 698.469,235.120 L 703.636,242.871 L 707.943,249.761 L 710.526,254.067 L 714.833,261.818 L 717.416,266.986 L 721.722,275.598 L 726.029,285.072 L 728.612,291.100 L 730.335,295.407 L 732.057,299.713 L 734.641,306.603 L 738.947,318.660 L 742.392,329.856 L 747.560,347.943 L 748.421,351.388 L 751.005,362.584 L 752.727,370.335 L 753.589,374.641 L 756.172,390.144 L 757.033,396.172 L 757.895,402.201 L 758.756,409.091 L 759.617,416.842 L 760.478,427.177 L 761.340,440.957 L 761.340,484.019 L 760.478,498.660 L 759.617,508.995 L 758.756,515.885 L 757.033,517.608 L 522.775,518.469 L 522.775,521.914 L 523.636,522.775 L 523.636,526.220 L 522.775,543.445 L 523.636,567.560 L 567.560,567.560 L 568.421,568.421 L 702.775,569.282 L 846.603,569.282 L 890.526,570.144 L 896.555,571.005 L 900.000,571.866 L 906.029,573.589 L 910.335,575.311 L 915.502,577.895 L 918.086,579.617 L 920.670,581.340 L 924.976,584.785 L 930.144,589.952 L 932.727,593.397 L 934.450,595.981 L 937.895,602.010 L 939.617,606.316 L 940.478,608.900 L 941.340,611.483 L 942.201,614.928 L 943.062,618.373 L 943.923,623.541 L 944.785,633.876 L 943.923,650.239 L 943.923,663.158 L 996.459,663.158 L 995.598,432.344 L 943.923,433.206 L 943.923,439.234 L 944.785,454.737 L 943.923,465.933 L 943.062,471.100 L 942.201,474.545 L 941.340,477.990 L 940.478,480.574 L 939.617,483.158 L 937.895,486.603 L 935.311,491.770 L 933.589,494.354 L 931.005,497.799 L 923.254,505.550 L 915.502,510.718 L 913.780,511.579 L 912.057,512.440 L 904.306,515.024 L 900.861,515.885 L 896.555,515.024 L 896.555,453.876 L 895.694,440.096 L 894.833,429.761 L 893.971,422.010 L 893.110,414.258 L 892.249,407.368 L 891.388,401.340 L 889.665,390.144 L 887.943,380.670 L 884.498,363.445 L 881.914,352.249 L 881.053,348.804 L 878.469,339.330 L 876.746,333.301 L 870.718,315.215 L 867.273,305.742 L 861.244,291.100 L 856.077,279.904 L 853.493,274.737 L 849.187,266.124 L 844.880,258.373 L 841.435,252.344 L 838.852,248.038 L 834.545,241.148 L 831.100,235.981 L 825.933,228.230 L 821.627,222.201 L 813.876,211.866 L 810.431,207.560 L 806.124,202.392 L 800.957,196.364 L 776.842,172.249 L 770.813,167.081 L 766.507,163.636 L 762.201,160.191 L 751.866,152.440 L 741.531,145.550 L 734.641,141.244 L 728.612,137.799 L 721.722,134.354 L 709.665,128.325 L 701.914,124.880 L 695.024,122.297 L 689.856,120.574 L 682.105,117.990 L 676.077,116.268 L 662.297,112.823 L 652.823,111.100 L 646.794,110.239 L 638.182,109.378 Z"/></svg>
+          <span class="footer-logo-text">DON ELCLASICO</span>
+        </div>
+        <p class="footer-tagline">Where every seam carries your signature.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#catalogue">Catalogue</a>
+        <a href="#measurements">Measurements</a>
+        <a href="#contact">Contact</a>
+        <a href="admin.html" style="opacity:0.4; font-size:0.6rem; letter-spacing:0.15em;">Admin</a>
+      </div>
+      <p class="footer-copy">© 2026 DON ELCLASICO. All rights reserved. Engineered with precision in Nigeria.</p>
+    </div>
+  </footer>
+
+  <!-- ======= PRODUCT MODAL ======= -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-grid">
+        <div class="modal-image-side">
+          <img id="modalImg" src="" alt="" />
+          <div class="fabric-upload">
+            <label for="fabricUpload" class="fabric-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Your Fabric / Material
+            </label>
+            <input type="file" id="fabricUpload" accept="image/*" />
+            <div class="fabric-preview" id="fabricPreview"></div>
+          </div>
+        </div>
+        <div class="modal-info-side">
+          <span class="modal-category" id="modalCategory"></span>
+          <h2 id="modalName"></h2>
+          <p class="modal-price" id="modalPrice"></p>
+          <p class="modal-desc" id="modalDesc"></p>
+          <div class="modal-features" id="modalFeatures"></div>
+          <div class="form-group">
+            <textarea id="modalInstructions" placeholder=" " rows="3"></textarea>
+            <label for="modalInstructions">Special Instructions</label>
+          </div>
+          <button class="btn-primary full-width" id="modalAddCart">Commission This Piece</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= CART DRAWER ======= -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>Your Commission</h3>
+      <button class="cart-close-btn" id="cartClose">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty" id="cartEmpty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <p>No pieces selected</p>
+        <span>Explore the collection</span>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">₦0</span>
+      </div>
+      <button class="btn-primary full-width" id="checkoutBtn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ======= CHECKOUT MODAL ======= -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box checkout-box">
+      <button class="modal-close" id="checkoutClose">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="checkout-grid">
+        <div class="checkout-summary">
+          <h3>Order Summary</h3>
+          <div class="co-items" id="coItems"></div>
+          <div class="co-total">
+            <span>Total</span>
+            <span id="coTotal">₦0</span>
+          </div>
+        </div>
+        <div class="checkout-form-side">
+          <h3>Your Details</h3>
+          <form id="checkoutForm" novalidate>
+            <div class="form-group">
+              <input type="text" id="coName" placeholder=" " required />
+              <label for="coName">Full Name *</label>
+            </div>
+            <div class="form-group">
+              <input type="email" id="coEmail" placeholder=" " required />
+              <label for="coEmail">Email *</label>
+            </div>
+            <div class="form-group">
+              <input type="tel" id="coPhone" placeholder=" " required />
+              <label for="coPhone">Phone Number *</label>
+            </div>
+            <div class="form-group">
+              <textarea id="coAddress" placeholder=" " rows="2"></textarea>
+              <label for="coAddress">Delivery Address</label>
+            </div>
+            <button type="submit" class="btn-primary full-width pay-btn">
+              <span>Pay with Paystack</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SUCCESS MODAL ======= -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-box success-box">
+      <div class="success-inner">
+        <div class="success-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>Commission Confirmed.</h2>
+        <p>Thank you for choosing DON ELCLASICO. Your bespoke commission is underway. We'll be in contact within 24 hours to confirm your specifications.</p>
+        <button class="btn-primary" id="successClose">Continue Exploring</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= TOAST ======= -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Item added</span>
+  </div>
+
+  <script src="scripts/script.js"></script>
+</body>
+</html>
