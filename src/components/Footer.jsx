@@ -303,7 +303,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t px-[clamp(1.5rem,6vw,7rem)] pb-12 pt-24"
+      className="border-t px-[clamp(1.5rem,6vw,7rem)] pb-12 pt-16 md:pt-24"
       style={{ borderColor: "var(--border-light)", background: "var(--off-black)" }}
     >
       <div className="mx-auto max-w-[1400px]">
@@ -314,13 +314,17 @@ export default function Footer() {
             <BrandMark size="h-12 w-12" text="text-2xl" />
 
             <p
-              className="max-w-[300px] text-[0.95rem] font-light leading-[1.8]"
+              className="max-w-full md:max-w-[380px] text-[0.95rem] font-light leading-[1.8]"
               style={{ color: "var(--text-light)" }}
             >
-              Where every seam carries your signature.
+              We don't just take your measurements
+              <br />
+              We understand the assignment
+              <br />
+              We deliver on it, every single time.
             </p>
 
-            <div className="mt-1 flex flex-wrap gap-5">
+            <div className="mt-1 flex gap-[10px]">
               {SOCIALS.map((s) => (
                 <a
                   key={s.label}
@@ -328,10 +332,10 @@ export default function Footer() {
                   aria-label={s.label}
                   target={s.external ? "_blank" : undefined}
                   rel={s.external ? "noopener noreferrer" : undefined}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 hover:-translate-y-0.5 hover:text-[var(--accent)] hover:border-[var(--accent)]"
+                  className="flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-all duration-300 hover:-translate-y-0.5 hover:text-[var(--accent)] hover:border-[var(--accent)]"
                   style={{ color: "var(--text-muted)", borderColor: "var(--border-light)" }}
                 >
-                  <span className="h-5 w-5">{s.icon}</span>
+                  <span className="h-[18px] w-[18px]">{s.icon}</span>
                 </a>
               ))}
             </div>
@@ -398,7 +402,7 @@ export default function Footer() {
         />
 
         {/* Bottom bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col items-center gap-2 text-center md:flex-row md:justify-between md:text-left">
           <p className="text-[0.8rem] font-light" style={{ color: "var(--text-muted)" }}>
             © {year} DON ELCLASICO. All rights reserved.
           </p>
