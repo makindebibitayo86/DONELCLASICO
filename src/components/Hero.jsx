@@ -137,9 +137,9 @@ const css = `
 
   .de-headline {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 5.2vw, 76px);
+    font-size: clamp(44px, 4.2vw, 64px);
     font-weight: 300;
-    line-height: 1.06;
+    line-height: 1.08;
     color: var(--fg);
     margin-bottom: 22px;
     opacity: 0;
@@ -168,7 +168,7 @@ const css = `
     font-weight: 300;
     line-height: 1.82;
     color: var(--muted);
-    max-width: 280px;
+    max-width: 340px;
     margin-bottom: 48px;
     opacity: 0;
     transform: translateY(14px);
