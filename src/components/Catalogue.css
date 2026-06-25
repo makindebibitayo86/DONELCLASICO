@@ -1,0 +1,708 @@
+/* ── Catalogue.css ── */
+
+/* ─── Theme tokens ─────────────────────────────────────────── */
+:root {
+  --cat-modal-bg:           #141414;
+  --cat-modal-border:       rgba(255, 255, 255, 0.08);
+  --cat-modal-text:         #fafaf8;
+  --cat-modal-text-muted:   rgba(250, 250, 248, 0.55);
+  --cat-modal-text-mid:     rgba(250, 250, 248, 0.65);
+  --cat-modal-text-dim:     rgba(250, 250, 248, 0.35);
+  --cat-modal-text-subdim:  rgba(250, 250, 248, 0.70);
+  --cat-modal-close-bg:     rgba(0, 0, 0, 0.5);
+  --cat-modal-close-border: rgba(255, 255, 255, 0.12);
+  --cat-modal-close-color:  rgba(255, 255, 255, 0.7);
+  --cat-modal-close-hover:  rgba(255, 255, 255, 0.4);
+  --cat-modal-note-bg:      rgba(255, 255, 255, 0.04);
+  --cat-modal-note-border:  rgba(255, 255, 255, 0.10);
+  --cat-modal-note-focus:   rgba(255, 255, 255, 0.25);
+  --cat-modal-note-ph:      rgba(255, 255, 255, 0.25);
+  --cat-modal-scroll:       rgba(255, 255, 255, 0.1);
+  --cat-card-bg:            #111111;
+  --cat-card-border:        rgba(255, 255, 255, 0.08);
+  --cat-dot-inactive:       rgba(255, 255, 255, 0.15);
+  --cat-arrow-btn-border:   rgba(255, 255, 255, 0.12);
+  --cat-arrow-btn-color:    rgba(255, 255, 255, 0.4);
+  --cat-skeleton-bg:        rgba(255, 255, 255, 0.06);
+  --cat-skeleton-shine1:    rgba(255, 255, 255, 0.07);
+  --cat-skeleton-shine2:    rgba(255, 255, 255, 0.14);
+}
+
+[data-theme="light"],
+.light {
+  --cat-modal-bg:           #faf8f5;
+  --cat-modal-border:       rgba(0, 0, 0, 0.10);
+  --cat-modal-text:         #1a1614;
+  --cat-modal-text-muted:   rgba(26, 22, 20, 0.55);
+  --cat-modal-text-mid:     rgba(26, 22, 20, 0.65);
+  --cat-modal-text-dim:     rgba(26, 22, 20, 0.40);
+  --cat-modal-text-subdim:  rgba(26, 22, 20, 0.75);
+  --cat-modal-close-bg:     rgba(255, 255, 255, 0.7);
+  --cat-modal-close-border: rgba(0, 0, 0, 0.15);
+  --cat-modal-close-color:  rgba(0, 0, 0, 0.55);
+  --cat-modal-close-hover:  rgba(0, 0, 0, 0.30);
+  --cat-modal-note-bg:      rgba(0, 0, 0, 0.03);
+  --cat-modal-note-border:  rgba(0, 0, 0, 0.12);
+  --cat-modal-note-focus:   rgba(0, 0, 0, 0.22);
+  --cat-modal-note-ph:      rgba(0, 0, 0, 0.25);
+  --cat-modal-scroll:       rgba(0, 0, 0, 0.1);
+  --cat-card-bg:            #f0ece6;
+  --cat-card-border:        rgba(0, 0, 0, 0.08);
+  --cat-dot-inactive:       rgba(0, 0, 0, 0.15);
+  --cat-arrow-btn-border:   rgba(0, 0, 0, 0.14);
+  --cat-arrow-btn-color:    rgba(0, 0, 0, 0.40);
+  --cat-skeleton-bg:        rgba(0, 0, 0, 0.06);
+  --cat-skeleton-shine1:    rgba(0, 0, 0, 0.05);
+  --cat-skeleton-shine2:    rgba(0, 0, 0, 0.10);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]):not(.dark) {
+    --cat-modal-bg:           #faf8f5;
+    --cat-modal-border:       rgba(0, 0, 0, 0.10);
+    --cat-modal-text:         #1a1614;
+    --cat-modal-text-muted:   rgba(26, 22, 20, 0.55);
+    --cat-modal-text-mid:     rgba(26, 22, 20, 0.65);
+    --cat-modal-text-dim:     rgba(26, 22, 20, 0.40);
+    --cat-modal-text-subdim:  rgba(26, 22, 20, 0.75);
+    --cat-modal-close-bg:     rgba(255, 255, 255, 0.7);
+    --cat-modal-close-border: rgba(0, 0, 0, 0.15);
+    --cat-modal-close-color:  rgba(0, 0, 0, 0.55);
+    --cat-modal-close-hover:  rgba(0, 0, 0, 0.30);
+    --cat-modal-note-bg:      rgba(0, 0, 0, 0.03);
+    --cat-modal-note-border:  rgba(0, 0, 0, 0.12);
+    --cat-modal-note-focus:   rgba(0, 0, 0, 0.22);
+    --cat-modal-note-ph:      rgba(0, 0, 0, 0.25);
+    --cat-modal-scroll:       rgba(0, 0, 0, 0.1);
+    --cat-card-bg:            #f0ece6;
+    --cat-card-border:        rgba(0, 0, 0, 0.08);
+    --cat-dot-inactive:       rgba(0, 0, 0, 0.15);
+    --cat-arrow-btn-border:   rgba(0, 0, 0, 0.14);
+    --cat-arrow-btn-color:    rgba(0, 0, 0, 0.40);
+    --cat-skeleton-bg:        rgba(0, 0, 0, 0.06);
+    --cat-skeleton-shine1:    rgba(0, 0, 0, 0.05);
+    --cat-skeleton-shine2:    rgba(0, 0, 0, 0.10);
+  }
+}
+
+/* ─── Section shell ────────────────────────────────────────── */
+.catalogue-section {
+  padding: 6rem 0 4rem;
+  background: var(--bg);
+}
+
+/* ─── Header ───────────────────────────────────────────────── */
+.cat-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 1.25rem;
+}
+
+.cat-label {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+
+.cat-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1.1rem;
+  line-height: 1.1;
+}
+
+.cat-sub {
+  max-width: 36rem;
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ─── Filter bar ───────────────────────────────────────────── */
+.cat-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0 1.25rem;
+}
+
+.cat-filter-btn {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  font-family: inherit;
+}
+
+.cat-filter-btn.active,
+.cat-filter-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  /* accent text: dark bg needs light text, light bg needs dark text.
+     --accent-fg should be set in index.css alongside --accent. */
+  color: var(--accent-fg, #fff);
+}
+
+/* ─── Carousel (desktop) ────────────────────────────────────── */
+.cat-carousel {
+  position: relative;
+  margin-bottom: 2rem;
+  padding: 0 64px;
+}
+
+.cat-carousel__track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 60px 4px 76px;
+  scrollbar-width: none;
+  justify-content: safe center;
+}
+.cat-carousel__track::-webkit-scrollbar { display: none; }
+
+.cat-carousel__item {
+  flex: 0 0 420px;
+  width: 420px;
+  scroll-snap-align: center;
+  transform-origin: center center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+  will-change: transform, opacity;
+}
+
+.cat-carousel__arrow {
+  position: absolute;
+  top: 56px;
+  bottom: 72px;
+  width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Fade using --bg so it matches the page background in both dark and light mode */
+  background: linear-gradient(to right, var(--bg) 30%, transparent);
+  border: none;
+  color: var(--text-primary);
+  font-size: 36px;
+  cursor: pointer;
+  z-index: 5;
+  transition: color 0.2s;
+}
+.cat-carousel__arrow--left  { left: 0; }
+.cat-carousel__arrow--right { right: 0; background: linear-gradient(to left, var(--bg) 30%, transparent); }
+.cat-carousel__arrow:hover  { color: var(--accent); }
+
+/* ─── Photo card ────────────────────────────────────────────── */
+.cat-photo-card {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1.5px solid var(--cat-card-border);
+  background: var(--cat-card-bg);
+  transition: border-color 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.cat-photo-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.cat-photo-card__img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cat-photo-card:hover .cat-photo-card__img {
+  transform: scale(1.04);
+}
+
+/* Bottom gradient scrim — same as BookingWizard */
+.cat-photo-card__img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.04) 100%);
+}
+
+.cat-photo-card__badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.3rem 0.65rem;
+  background: var(--accent);
+  color: var(--accent-fg, #fff);
+  border-radius: 3px;
+}
+
+.cat-photo-card__body {
+  position: relative;
+  z-index: 1;
+  padding: 1.6rem;
+}
+
+.cat-photo-card__category {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.cat-photo-card__name {
+  font-size: 26px;
+  font-weight: 600;
+  color: #fafaf8; /* stays light — always on dark image scrim */
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1.15;
+  margin-bottom: 0.4rem;
+}
+
+.cat-photo-card__price {
+  font-size: 15px;
+  color: rgba(250,250,248,0.65); /* stays light — always on dark image scrim */
+}
+
+/* ─── Mobile carousel ───────────────────────────────────────── */
+@media (max-width: 767px) {
+  .cat-carousel--mobile {
+    padding: 0;
+    margin-bottom: 1.6rem;
+  }
+
+  .cat-carousel__track--mobile {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0 0.4rem;
+    scrollbar-width: none;
+  }
+  .cat-carousel__track--mobile::-webkit-scrollbar { display: none; }
+
+  .cat-carousel__item--mobile {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0 5vw;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+  }
+
+  .cat-carousel__item--mobile .cat-photo-card {
+    height: 125vw;
+    max-height: 560px;
+    min-height: 380px;
+  }
+
+  /* Swipe hint */
+  .cat-carousel__swipe-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0.7rem 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .cat-carousel__swipe-hint.visible { opacity: 0.8; }
+  .cat-carousel__swipe-arrow {
+    display: inline-block;
+    animation: cat-swipe-nudge 0.9s ease-in-out infinite alternate;
+  }
+  .cat-carousel__swipe-arrow:last-child { animation-direction: alternate-reverse; }
+
+  @keyframes cat-swipe-nudge {
+    from { transform: translateX(-4px); }
+    to   { transform: translateX(4px); }
+  }
+
+  /* Dots + mini arrow buttons */
+  .cat-carousel__dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 0.7rem;
+  }
+  .cat-carousel__dot-track {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .cat-carousel__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cat-dot-inactive);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  .cat-carousel__dot.active {
+    width: 22px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .cat-carousel__arrow-btn {
+    background: transparent;
+    border: 1px solid var(--cat-arrow-btn-border);
+    color: var(--cat-arrow-btn-color);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+    font-family: inherit;
+  }
+  .cat-carousel__arrow-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .cat-carousel__arrow-btn:disabled { opacity: 0.2; cursor: default; }
+}
+
+/* ─── Empty state ───────────────────────────────────────────── */
+.cat-empty {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ─── Product Modal ─────────────────────────────────────────── */
+.pmodal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.pmodal {
+  position: relative;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  grid-template-rows: 1fr;  /* single row — each column manages its own height */
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  height: 90vh;             /* fixed height so both columns are constrained */
+  background: var(--cat-modal-bg);
+  border: 1px solid var(--cat-modal-border);
+  border-radius: 4px;
+  overflow: hidden;         /* clips border-radius; columns scroll internally */
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.pmodal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: var(--cat-modal-close-bg);
+  border: 1px solid var(--cat-modal-close-border);
+  color: var(--cat-modal-close-color);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: inherit;
+}
+.pmodal__close:hover {
+  color: var(--cat-modal-text);
+  border-color: var(--cat-modal-close-hover);
+}
+
+.pmodal__img {
+  background-size: cover;
+  background-position: center;
+  min-height: unset;        /* let the grid row height drive it, not min-height */
+  height: 100%;             /* fill the full modal height */
+}
+
+.pmodal__body {
+  padding: 2.2rem 2rem 1.8rem;
+  height: 100%;             /* fill grid row */
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  scrollbar-width: none;    /* Firefox — hide scrollbar */
+  -ms-overflow-style: none; /* IE/Edge — hide scrollbar */
+}
+.pmodal__body::-webkit-scrollbar { display: none; } /* Chrome/Safari — hide scrollbar */
+
+.pmodal__category {
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.6rem;
+}
+
+.pmodal__name {
+  font-size: clamp(1.7rem, 3vw, 2.1rem);
+  font-weight: 600;
+  color: var(--cat-modal-text);
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1.12;
+  margin: 0 0 0.65rem;
+}
+
+.pmodal__price {
+  font-size: 16px;
+  color: var(--cat-modal-text-mid);
+  margin: 0 0 1.1rem;
+}
+
+.pmodal__desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--cat-modal-text-muted);
+  margin: 0 0 1rem;
+}
+
+.pmodal__details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.pmodal__details li {
+  font-size: 13px;
+  color: var(--cat-modal-text-mid);
+  padding-left: 1.1rem;
+  position: relative;
+  line-height: 1.5;
+}
+.pmodal__details li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 1.1em;
+}
+
+.pmodal__note {
+  width: 100%;
+  background: var(--cat-modal-note-bg);
+  border: 1px solid var(--cat-modal-note-border);
+  border-radius: 3px;
+  color: var(--cat-modal-text-subdim);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 0.75rem 0.9rem;
+  resize: none;
+  height: 88px;
+  min-height: 88px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.pmodal__note::placeholder { color: var(--cat-modal-note-ph); }
+.pmodal__note:focus {
+  outline: none;
+  border-color: var(--cat-modal-note-focus);
+}
+
+.pmodal__cta {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  background: var(--accent);
+  color: var(--accent-fg, #1a1209);
+  border: none;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-bottom: 0.85rem;
+}
+.pmodal__cta:hover { opacity: 0.88; }
+
+/* ─── Modal mobile ──────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .pmodal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  /* Single scrollable sheet — image and body scroll together */
+  .pmodal {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+    grid-template-rows: unset;
+    height: 92vh;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    max-width: 100%;
+    overflow-y: auto;   /* the whole modal scrolls as one */
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .pmodal::-webkit-scrollbar { display: none; }
+
+  .pmodal__img {
+    position: relative;   /* back in flow so it contributes to scroll height */
+    flex-shrink: 0;
+    width: 100%;
+    height: 100vw;       /* square canvas — enough room for full portrait image */
+    min-height: 320px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #0d0d0d; /* dark fill for letterbox gaps */
+    background-position: center center;
+  }
+
+  .pmodal__body {
+    flex-shrink: 0;       /* don't compress — let the outer modal scroll */
+    padding: 1.5rem 1.25rem 2.5rem;
+    overflow: visible;    /* no inner scroll — outer modal handles it */
+    height: auto;
+    max-height: unset;
+  }
+
+  .pmodal__name {
+    font-size: 1.65rem;
+  }
+}
+
+/* ─── Skeleton loaders ──────────────────────────────────────── */
+/* Track is non-scrollable while loading — no arrows/snap needed yet */
+.cat-carousel--skeleton .cat-carousel__track--skeleton {
+  overflow: hidden;
+  justify-content: center;
+}
+
+.cat-carousel--skeleton .cat-carousel__item {
+  /* skeleton cards don't need the hover scale-cascade */
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.cat-photo-card--skeleton {
+  cursor: default;
+  border-color: var(--cat-card-border);
+}
+.cat-photo-card--skeleton:hover {
+  border-color: var(--cat-card-border);
+  transform: none;
+}
+
+.cat-skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: var(--cat-skeleton-bg);
+}
+
+.cat-skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    var(--cat-skeleton-shine1) 45%,
+    var(--cat-skeleton-shine2) 50%,
+    var(--cat-skeleton-shine1) 55%,
+    transparent 70%
+  );
+  animation: cat-shimmer-sweep 1.6s ease-in-out infinite;
+}
+
+@keyframes cat-shimmer-sweep {
+  100% { transform: translateX(100%); }
+}
+
+.cat-skeleton-shimmer--img {
+  position: absolute;
+  inset: 0;
+}
+
+.cat-skeleton-line {
+  border-radius: 3px;
+}
+.cat-skeleton-line--label {
+  width: 36%;
+  height: 11px;
+  margin-bottom: 0.55rem;
+}
+.cat-skeleton-line--name {
+  width: 72%;
+  height: 22px;
+  margin-bottom: 0.55rem;
+}
+.cat-skeleton-line--price {
+  width: 40%;
+  height: 14px;
+}
+
+/* Stagger the shimmer slightly per card so it feels alive, not synced */
+.cat-carousel__item:nth-child(2) .cat-skeleton-shimmer { animation-delay: 0.12s; }
+.cat-carousel__item:nth-child(3) .cat-skeleton-shimmer { animation-delay: 0.24s; }
+.cat-carousel__item:nth-child(4) .cat-skeleton-shimmer { animation-delay: 0.36s; }
+
+/* Disabled filter buttons while loading */
+.cat-filter-btn.disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}

@@ -1,0 +1,78 @@
+/* ── Loader.css ── */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--black, #080808);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-inner {
+  text-align: center;
+}
+
+.loader-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: #f2f0ec;
+  display: block;
+  margin-bottom: 1.5rem;
+  animation: loaderFadeIn 0.6s ease forwards;
+}
+
+.loader-bar {
+  width: 240px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0 auto;
+}
+
+.loader-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #8a7e70, #d4c8b8);
+  animation: loadFill 2s ease forwards;
+}
+
+.loader-sub {
+  display: block;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: #b8a898;
+  margin-top: 1.5rem;
+  animation: loaderFadeIn 0.8s ease 0.3s both;
+}
+
+@keyframes loadFill {
+  to { width: 100%; }
+}
+
+@keyframes loaderFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Light mode */
+body.light #loader {
+  background: #f4f1ec;
+}
+body.light .loader-brand {
+  color: #1a1814;
+}
+body.light .loader-fill {
+  background: linear-gradient(90deg, #8a7e70, #b8a898);
+}

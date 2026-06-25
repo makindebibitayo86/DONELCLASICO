@@ -1,0 +1,119 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Barlow:wght@200;300;400;500;600&display=swap');
+
+/* =========================================================
+   DON ELCLASICO — Design Tokens
+   ========================================================= */
+:root {
+  --black:          #080808;
+  --off-black:      #0e0e0e;
+  --dark:           #141414;
+  --charcoal:       #1c1c1c;
+  --mid:            #2a2a2a;
+  --slate:          #3a3a3a;
+  --white:          #f2f0ec;
+  --warm-white:     #e8e4de;
+  --silver:         #a8a49e;
+  --silver-light:   #c8c4bc;
+  --silver-dark:    #6a6660;
+  --accent:         #b8a898;
+  --accent-light:   #d4c8b8;
+  --accent-dark:    #8a7e70;
+  --text-muted:     #787470;
+  --text-light:     #b0aca6;
+  --border:         rgba(184,168,152,0.18);
+  --border-light:   rgba(255,255,255,0.06);
+  --glass:          rgba(255,255,255,0.02);
+  --shadow-accent:  0 0 40px rgba(184,168,152,0.08);
+  --marquee-bg:     rgba(0,0,0,0.4);
+  --radius:         1px;
+  --transition:     0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display:   'Playfair Display', Georgia, serif;
+  --font-body:      'Barlow', sans-serif;
+}
+
+/* Light mode — flips all tokens */
+body.light {
+  --black:        #f4f1ec;
+  --off-black:    #ede9e2;
+  --dark:         #e6e2da;
+  --charcoal:     #ddd9d0;
+  --mid:          #ccc8c0;
+  --slate:        #b8b4ac;
+  --white:        #1a1814;
+  --warm-white:   #2a2620;
+  --silver:       #6a6660;
+  --silver-light: #4a4640;
+  --silver-dark:  #8a8880;
+  --accent:       #7a6e60;
+  --accent-light: #5a4e42;
+  --accent-dark:  #a09080;
+  --text-muted:   #7a7470;
+  --text-light:   #5a5450;
+  --border:       rgba(100,90,80,0.2);
+  --border-light: rgba(0,0,0,0.08);
+  --glass:        rgba(0,0,0,0.02);
+  --shadow-accent: 0 0 40px rgba(100,90,80,0.1);
+  --marquee-bg:    rgba(230,226,218,0.5);
+  background: var(--black);
+  color: var(--white);
+}
+
+/* =========================================================
+   Base
+   NOTE: wrapped in @layer base so these rules share Tailwind's
+   own base layer instead of sitting unlayered. Unlayered author
+   CSS always beats @layer utilities regardless of specificity,
+   which was silently zeroing out every margin utility (mb-*,
+   mt-*, etc.) used throughout the app, including the footer.
+   ========================================================= */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img  { max-width: 100%; display: block; }
+  a    { text-decoration: none; color: inherit; }
+}
+
+/* =========================================================
+   Scrollbar
+   ========================================================= */
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--slate); }
+
+/* =========================================================
+   nav-link underline — Tailwind's after: pseudo utility
+   doesn't handle width transition cleanly, so we keep this
+   one rule in CSS.
+   ========================================================= */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* =========================================================
+   Marquee — referenced from components via
+   animate-[marquee_35s_linear_infinite]
+   ========================================================= */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
