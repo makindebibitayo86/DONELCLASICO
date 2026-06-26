@@ -43,11 +43,16 @@ function MainSite({ isLight, setIsLight }) {
 function App() {
   // ── Theme ─────────────────────────────────────────────────────────────────
   const [isLight, setIsLight] = useState(() => {
-    return localStorage.getItem('de_theme') === 'light'
+    const stored = localStorage.getItem('de_theme') === 'light'
+    // Seed <html> immediately so token selectors don't flash on load
+    if (stored) document.documentElement.classList.add('light')
+    return stored
   })
 
   useEffect(() => {
+    // Write to both <body> (existing site styles) and <html> (Measurements + ContactSection token selectors)
     document.body.classList.toggle('light', isLight)
+    document.documentElement.classList.toggle('light', isLight)
     localStorage.setItem('de_theme', isLight ? 'light' : 'dark')
   }, [isLight])
 

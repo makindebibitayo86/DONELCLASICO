@@ -124,24 +124,8 @@ export default function ContactSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Barlow:wght@200;300;400&display=swap');
 
-        /* ── Dark theme (default) ── */
+        /* ── Light theme (safe default baseline) ── */
         :root {
-          --cs-bg:            #141414;
-          --cs-border:        rgba(255,255,255,0.06);
-          --cs-accent:        #b8a898;
-          --cs-accent-sub:    #d4c8b8;
-          --cs-text-primary:  #f2f0ec;
-          --cs-text-muted:    #787470;
-          --cs-card-bg:       rgba(255,255,255,0.02);
-          --cs-card-border:   rgba(255,255,255,0.06);
-          --cs-card-bg-hover: rgba(184,168,152,0.03);
-          --cs-card-bdr-hover:rgba(184,168,152,0.18);
-          --cs-icon-border:   rgba(184,168,152,0.18);
-        }
-
-        /* ── Light theme — triggered by [data-theme="light"] or .light on any ancestor ── */
-        [data-theme="light"],
-        .light {
           --cs-bg:            #f5f2ee;
           --cs-border:        rgba(0,0,0,0.08);
           --cs-accent:        #8a6f5e;
@@ -155,21 +139,53 @@ export default function ContactSection() {
           --cs-icon-border:   rgba(138,111,94,0.28);
         }
 
-        /* ── Respect OS preference when no explicit toggle is set ── */
-        @media (prefers-color-scheme: light) {
-          :root:not([data-theme="dark"]):not(.dark) {
-            --cs-bg:            #f5f2ee;
-            --cs-border:        rgba(0,0,0,0.08);
-            --cs-accent:        #8a6f5e;
-            --cs-accent-sub:    #6b5244;
-            --cs-text-primary:  #1a1614;
-            --cs-text-muted:    #6b6460;
-            --cs-card-bg:       rgba(0,0,0,0.02);
-            --cs-card-border:   rgba(0,0,0,0.08);
-            --cs-card-bg-hover: rgba(138,111,94,0.06);
-            --cs-card-bdr-hover:rgba(138,111,94,0.28);
-            --cs-icon-border:   rgba(138,111,94,0.28);
+        /* ── OS-level dark mode (catches mobile Safari, Android Chrome, etc.) ── */
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --cs-bg:            #141414;
+            --cs-border:        rgba(255,255,255,0.06);
+            --cs-accent:        #b8a898;
+            --cs-accent-sub:    #d4c8b8;
+            --cs-text-primary:  #f2f0ec;
+            --cs-text-muted:    #787470;
+            --cs-card-bg:       rgba(255,255,255,0.02);
+            --cs-card-border:   rgba(255,255,255,0.06);
+            --cs-card-bg-hover: rgba(184,168,152,0.03);
+            --cs-card-bdr-hover:rgba(184,168,152,0.18);
+            --cs-icon-border:   rgba(184,168,152,0.18);
           }
+        }
+
+        /* ── Explicit dark override (JS-toggled theme) ── */
+        [data-theme="dark"],
+        .dark {
+          --cs-bg:            #141414;
+          --cs-border:        rgba(255,255,255,0.06);
+          --cs-accent:        #b8a898;
+          --cs-accent-sub:    #d4c8b8;
+          --cs-text-primary:  #f2f0ec;
+          --cs-text-muted:    #787470;
+          --cs-card-bg:       rgba(255,255,255,0.02);
+          --cs-card-border:   rgba(255,255,255,0.06);
+          --cs-card-bg-hover: rgba(184,168,152,0.03);
+          --cs-card-bdr-hover:rgba(184,168,152,0.18);
+          --cs-icon-border:   rgba(184,168,152,0.18);
+        }
+
+        /* ── Explicit light override (JS-toggled theme) ── */
+        [data-theme="light"],
+        .light {
+          --cs-bg:            #f5f2ee;
+          --cs-border:        rgba(0,0,0,0.08);
+          --cs-accent:        #8a6f5e;
+          --cs-accent-sub:    #6b5244;
+          --cs-text-primary:  #1a1614;
+          --cs-text-muted:    #6b6460;
+          --cs-card-bg:       rgba(0,0,0,0.02);
+          --cs-card-border:   rgba(0,0,0,0.08);
+          --cs-card-bg-hover: rgba(138,111,94,0.06);
+          --cs-card-bdr-hover:rgba(138,111,94,0.28);
+          --cs-icon-border:   rgba(138,111,94,0.28);
         }
 
         .reveal-up {

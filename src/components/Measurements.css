@@ -1,20 +1,7 @@
 /* ── Measurements theme tokens ── */
-:root {
-  --mf-bg:              var(--off-black, #141414);
-  --mf-input-bg:        rgba(255, 255, 255, 0.025);
-  --mf-input-border:    rgba(255, 255, 255, 0.10);
-  --mf-input-border-focus: var(--accent, #b8a898);
-  --mf-input-bg-focus:  rgba(184, 168, 152, 0.04);
-  --mf-input-text:      var(--white, #f2f0ec);
-  --mf-label-color:     var(--text-muted, #787470);
-  --mf-upload-border:   rgba(184, 168, 152, 0.25);
-  --mf-progress-track:  rgba(255, 255, 255, 0.07);
-  --mf-toast-bg:        var(--off-black, #141414);
-  --mf-toast-color:     var(--white, #f2f0ec);
-}
 
-[data-theme="light"],
-.light {
+/* Default: light (safe baseline — avoids broken fallback chain on mobile) */
+:root {
   --mf-bg:              #f5f2ee;
   --mf-input-bg:        rgba(0, 0, 0, 0.03);
   --mf-input-border:    rgba(0, 0, 0, 0.15);
@@ -28,20 +15,53 @@
   --mf-toast-color:     #f2f0ec;
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]):not(.dark) {
-    --mf-bg:              #f5f2ee;
-    --mf-input-bg:        rgba(0, 0, 0, 0.03);
-    --mf-input-border:    rgba(0, 0, 0, 0.15);
-    --mf-input-border-focus: var(--accent, #8a6f5e);
-    --mf-input-bg-focus:  rgba(138, 111, 94, 0.05);
-    --mf-input-text:      #1a1614;
-    --mf-label-color:     #6b6460;
-    --mf-upload-border:   rgba(138, 111, 94, 0.30);
-    --mf-progress-track:  rgba(0, 0, 0, 0.08);
-    --mf-toast-bg:        #1a1614;
+/* OS-level dark mode (catches mobile Safari, Android Chrome, etc.) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mf-bg:              #141414;
+    --mf-input-bg:        rgba(255, 255, 255, 0.025);
+    --mf-input-border:    rgba(255, 255, 255, 0.10);
+    --mf-input-border-focus: var(--accent, #b8a898);
+    --mf-input-bg-focus:  rgba(184, 168, 152, 0.04);
+    --mf-input-text:      #f2f0ec;
+    --mf-label-color:     #787470;
+    --mf-upload-border:   rgba(184, 168, 152, 0.25);
+    --mf-progress-track:  rgba(255, 255, 255, 0.07);
+    --mf-toast-bg:        #141414;
     --mf-toast-color:     #f2f0ec;
   }
+}
+
+/* Explicit dark override (JS-toggled theme) */
+[data-theme="dark"],
+.dark {
+  --mf-bg:              #141414;
+  --mf-input-bg:        rgba(255, 255, 255, 0.025);
+  --mf-input-border:    rgba(255, 255, 255, 0.10);
+  --mf-input-border-focus: var(--accent, #b8a898);
+  --mf-input-bg-focus:  rgba(184, 168, 152, 0.04);
+  --mf-input-text:      #f2f0ec;
+  --mf-label-color:     #787470;
+  --mf-upload-border:   rgba(184, 168, 152, 0.25);
+  --mf-progress-track:  rgba(255, 255, 255, 0.07);
+  --mf-toast-bg:        #141414;
+  --mf-toast-color:     #f2f0ec;
+}
+
+/* Explicit light override (JS-toggled theme) */
+[data-theme="light"],
+.light {
+  --mf-bg:              #f5f2ee;
+  --mf-input-bg:        rgba(0, 0, 0, 0.03);
+  --mf-input-border:    rgba(0, 0, 0, 0.15);
+  --mf-input-border-focus: var(--accent, #8a6f5e);
+  --mf-input-bg-focus:  rgba(138, 111, 94, 0.05);
+  --mf-input-text:      #1a1614;
+  --mf-label-color:     #6b6460;
+  --mf-upload-border:   rgba(138, 111, 94, 0.30);
+  --mf-progress-track:  rgba(0, 0, 0, 0.08);
+  --mf-toast-bg:        #1a1614;
+  --mf-toast-color:     #f2f0ec;
 }
 
 .measurements {

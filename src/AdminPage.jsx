@@ -243,7 +243,7 @@ function DashboardSkeleton({ isMobile }) {
   )
 }
 
-function CatalogueSkeleton({ isMobile }) {
+function CatalogueSkeleton({ isMobile, itemsPerPage }) {
   return (
     <div>
       <style>{skeletonShimmer}</style>
@@ -253,9 +253,12 @@ function CatalogueSkeleton({ isMobile }) {
             <div style={{ display: 'flex', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
               {['40%', '30%', '20%'].map((w, i) => <Skel key={i} w={w} h={11} />)}
             </div>
-            {[0, 1, 2, 3, 4].map(i => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
-                <Skel w="40%" h={13} />
+            {Array.from({ length: itemsPerPage }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+                <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <Skel w="100%" h={13} />
+                  <Skel w="70%" h={13} />
+                </div>
                 <Skel w="30%" h={13} />
                 <Skel w="20%" h={13} />
               </div>
@@ -266,7 +269,7 @@ function CatalogueSkeleton({ isMobile }) {
             <div style={{ display: 'flex', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
               {['30%', '18%', '14%', '14%', '12%'].map((w, i) => <Skel key={i} w={w} h={11} />)}
             </div>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => (
+            {Array.from({ length: itemsPerPage }, (_, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
                 <Skel w="30%" h={13} />
                 <Skel w="18%" h={13} />
@@ -286,7 +289,9 @@ function CatalogueSkeleton({ isMobile }) {
   )
 }
 
-function MeasurementsSkeleton({ isMobile }) {
+function MeasurementsSkeleton({ isMobile, itemsPerPage }) {
+  // Use more rows than itemsPerPage to fill the visible screen height
+  const skeletonRows = isMobile ? 12 : itemsPerPage
   return (
     <div>
       <style>{skeletonShimmer}</style>
@@ -297,8 +302,8 @@ function MeasurementsSkeleton({ isMobile }) {
               <Skel w="50%" h={11} />
               <Skel w="35%" h={11} />
             </div>
-            {[0,1,2,3,4,5,6,7].map(i => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
+            {Array.from({ length: skeletonRows }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
                 <Skel w="50%" h={13} />
                 <Skel w="35%" h={13} />
               </div>
@@ -309,8 +314,8 @@ function MeasurementsSkeleton({ isMobile }) {
             <div style={{ display: 'flex', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
               {['20%','16%','22%','10%','10%','10%'].map((w,i) => <Skel key={i} w={w} h={11} />)}
             </div>
-            {[0,1,2,3,4,5,6,7].map(i => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
+            {Array.from({ length: skeletonRows }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
                 <Skel w="20%" h={13} />
                 <Skel w="16%" h={13} />
                 <Skel w="22%" h={13} />
@@ -570,7 +575,8 @@ function CatalogueSection({ setTopbarActions }) {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState('newest') // newest (by sort_order desc), name_asc, price_desc
   const isMobile = useIsMobile()
-  const itemsPerPage = isMobile ? 5 : 10
+  const isNarrowPhone = useIsMobile(390)
+  const itemsPerPage = isMobile ? (isNarrowPhone ? 8 : 5) : 10
 
   // Reset to page 1 if the page size changes (mobile <-> desktop) and current page is now out of range
   useEffect(() => { setPage(1) }, [itemsPerPage])
@@ -674,7 +680,7 @@ function CatalogueSection({ setTopbarActions }) {
       </div>
 
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {loading ? <CatalogueSkeleton isMobile={isMobile} /> : (
+      {loading ? <CatalogueSkeleton isMobile={isMobile} itemsPerPage={itemsPerPage} /> : (
         <>
           <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -747,8 +753,9 @@ function CatalogueSection({ setTopbarActions }) {
                   >
                     <Icon d="M15 18l-6-6 6-6" size={18} />
                   </button>
-                  <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)', textAlign: 'center' }}>
-                    Page {page} of {totalPages} <span style={{ whiteSpace: 'nowrap' }}>{sortedProducts.length} products</span>
+                  <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)', textAlign: 'center', lineHeight: 1.6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span>Page {page} of {totalPages}</span>
+                    <span>{sortedProducts.length} products</span>
                   </span>
                   <button
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
@@ -1161,10 +1168,15 @@ function MeasurementsSection({ setTopbarActions }) {
   const [editing, setEditing] = useState(null)
   const [viewing, setViewing] = useState(null)
   const isMobile = useIsMobile()
+  const isNarrowPhone = useIsMobile(390)
+  const itemsPerPage = isMobile ? (isNarrowPhone ? 8 : 5) : 10
+  const [page, setPage] = useState(1)
+  useEffect(() => { setPage(1) }, [itemsPerPage])
 
   const load = useCallback(async () => {
     setLoading(true)
     setError(null)
+    setPage(1)
     try {
       const res = await callApi('adminListMeasurements')
       setRecords(res.records || [])
@@ -1208,10 +1220,14 @@ function MeasurementsSection({ setTopbarActions }) {
     }
   }
 
+  const totalPages = Math.ceil(records.length / itemsPerPage)
+  const startIdx = (page - 1) * itemsPerPage
+  const paginatedRecords = records.slice(startIdx, startIdx + itemsPerPage)
+
   return (
     <div>
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {loading ? <MeasurementsSkeleton isMobile={isMobile} /> : (
+      {loading ? <MeasurementsSkeleton isMobile={isMobile} itemsPerPage={itemsPerPage} /> : (
         <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
@@ -1225,7 +1241,7 @@ function MeasurementsSection({ setTopbarActions }) {
               {records.length === 0 && (
                 <tr><td colSpan={isMobile ? 2 : 7} style={{ padding: 24, textAlign: 'center', color: 'var(--muted)' }}>No submissions yet.</td></tr>
               )}
-              {records.map((r) => (
+              {paginatedRecords.map((r) => (
                 <tr key={r.rowIndex} style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: '12px 16px', color: 'var(--text)', cursor: 'pointer' }} onClick={() => setViewing(r)}>{r.full_name}</td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>{r.phone_number ? `0${r.phone_number}` : '—'}</td>
@@ -1249,6 +1265,95 @@ function MeasurementsSection({ setTopbarActions }) {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {!loading && totalPages > 1 && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 16, padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 12 }}>
+          {isMobile ? (
+            <>
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                aria-label="Previous page"
+                style={{
+                  width: 36, height: 36, borderRadius: 8, border: '1px solid var(--border)',
+                  background: page === 1 ? 'transparent' : 'var(--elevated)', color: 'var(--muted)',
+                  cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.5 : 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}
+              >
+                <Icon d="M15 18l-6-6 6-6" size={18} />
+              </button>
+              <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)', textAlign: 'center', lineHeight: 1.6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span>Page {page} of {totalPages}</span>
+                <span>{records.length} submissions</span>
+              </span>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                aria-label="Next page"
+                style={{
+                  width: 36, height: 36, borderRadius: 8, border: '1px solid var(--border)',
+                  background: page === totalPages ? 'transparent' : 'var(--elevated)', color: 'var(--muted)',
+                  cursor: page === totalPages ? 'not-allowed' : 'pointer', opacity: page === totalPages ? 0.5 : 1,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}
+              >
+                <Icon d="M9 18l6-6-6-6" size={18} />
+              </button>
+            </>
+          ) : (
+            <>
+              <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                Showing {startIdx + 1}–{Math.min(startIdx + itemsPerPage, records.length)} of {records.length} submissions
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  style={{
+                    padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)',
+                    background: page === 1 ? 'transparent' : 'var(--elevated)', color: 'var(--muted)',
+                    cursor: page === 1 ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 600,
+                    opacity: page === 1 ? 0.5 : 1,
+                  }}
+                >
+                  ← Prev
+                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      style={{
+                        width: 32, height: 32, borderRadius: 6,
+                        border: page === p ? '1px solid var(--accent)' : '1px solid var(--border)',
+                        background: page === p ? 'var(--accent-dim)' : 'transparent',
+                        color: page === p ? 'var(--accent)' : 'var(--muted)',
+                        cursor: 'pointer', fontSize: 12, fontWeight: 600,
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  style={{
+                    padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)',
+                    background: page === totalPages ? 'transparent' : 'var(--elevated)', color: 'var(--muted)',
+                    cursor: page === totalPages ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 600,
+                    opacity: page === totalPages ? 0.5 : 1,
+                  }}
+                >
+                  Next →
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
