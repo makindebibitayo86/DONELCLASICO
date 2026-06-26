@@ -25,7 +25,7 @@ function MainSite({ isLight, setIsLight }) {
 
       <Hero />
 
-      <HeroMarquee />
+      <HeroMarquee isLight={isLight} />
 
       <Philosophy />
 

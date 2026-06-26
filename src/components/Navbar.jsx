@@ -150,10 +150,14 @@ export default function Navbar({ isLight, onThemeToggle }) {
       className={[
         'fixed top-0 left-0 right-0 z-[1000]',
         'px-4 md:px-16',
-        'transition-[background,box-shadow,opacity,transform] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'bg-transparent',
+        'transition-[box-shadow,opacity,transform] duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
         scrolled
-          ? 'bg-[rgba(8,8,8,0.94)] shadow-[0_1px_0_rgba(184,168,152,0.18)] backdrop-blur-[20px]'
-          : 'bg-transparent',
+          ? 'shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_12px_40px_-8px_rgba(0,0,0,0.45)]'
+          : '',
+        scrolled
+          ? "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent"
+          : '',
         visible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-full pointer-events-none',
       ].join(' ')}
     >
@@ -265,9 +269,8 @@ export default function Navbar({ isLight, onThemeToggle }) {
           className={[
             'flex flex-col gap-6',
             'px-4 md:px-16 pt-6 pb-8',
-            'border-t border-[rgba(255,255,255,0.06)]',
-            'bg-[rgba(8,8,8,0.98)]',
-            'backdrop-blur-[20px]',
+            'border-t border-white/10',
+            'bg-transparent',
           ].join(' ')}
         >
           {NAV_LINKS.map(({ label, href }) => {
