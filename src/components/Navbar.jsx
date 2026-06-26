@@ -61,12 +61,39 @@ const NAV_LINKS = [
 export default function Navbar({ isLight, onThemeToggle }) {
   const { cartCount, setIsOpen } = useCart()
   const [scrolled, setScrolled] = useState(false)
+  const [visible, setVisible] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState(NAV_LINKS[0].href)
 
-  // scroll detection
+  // Navbar is permanently dark, independent of the site-wide theme toggle.
+  // We capture the token values once on first mount (when the app is in its
+  // natural/default dark state) and re-declare them directly on the <nav>.
+  // Because CSS custom properties cascade, this re-declaration wins over
+  // whatever the theme toggle later sets higher up the tree (on <html> or
+  // <body>), so every descendant link/icon/badge inside the navbar stays
+  // locked to dark forever — the rest of the site keeps toggling normally.
+  const [lockedTheme] = useState(() => {
+    if (typeof window === 'undefined') return {}
+    const tokens = ['--white', '--black', '--accent', '--text-light']
+    const computed = getComputedStyle(document.documentElement)
+    const locked = {}
+    tokens.forEach((token) => {
+      const value = computed.getPropertyValue(token).trim()
+      if (value) locked[token] = value
+    })
+    return locked
+  })
+
+  // scroll detection + hide navbar once past the hero section
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30)
+    const hero = document.querySelector('#home')
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30)
+      if (hero) {
+        const heroBottom = hero.getBoundingClientRect().bottom
+        setVisible(heroBottom > 0)
+      }
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -119,15 +146,15 @@ export default function Navbar({ isLight, onThemeToggle }) {
   return (
     <nav
       id="navbar"
+      style={lockedTheme}
       className={[
         'fixed top-0 left-0 right-0 z-[1000]',
         'px-4 md:px-16',
-        'transition-[background,box-shadow] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'transition-[background,box-shadow,opacity,transform] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
         scrolled
-          ? isLight
-            ? 'bg-[rgba(244,241,236,0.94)] shadow-[0_1px_0_rgba(0,0,0,0.08)] backdrop-blur-[20px]'
-            : 'bg-[rgba(8,8,8,0.94)] shadow-[0_1px_0_rgba(184,168,152,0.18)] backdrop-blur-[20px]'
+          ? 'bg-[rgba(8,8,8,0.94)] shadow-[0_1px_0_rgba(184,168,152,0.18)] backdrop-blur-[20px]'
           : 'bg-transparent',
+        visible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-full pointer-events-none',
       ].join(' ')}
     >
       {/* ── Inner row ─────────────────────────────────────────────────── */}
@@ -239,9 +266,7 @@ export default function Navbar({ isLight, onThemeToggle }) {
             'flex flex-col gap-6',
             'px-4 md:px-16 pt-6 pb-8',
             'border-t border-[rgba(255,255,255,0.06)]',
-            isLight
-              ? 'bg-[rgba(244,241,236,0.98)]'
-              : 'bg-[rgba(8,8,8,0.98)]',
+            'bg-[rgba(8,8,8,0.98)]',
             'backdrop-blur-[20px]',
           ].join(' ')}
         >
