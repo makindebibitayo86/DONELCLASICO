@@ -1,7 +1,6 @@
-// ─── SVG: Brand Logo ────────────────────────────────────────────────────────
-const LogoSVG = ({ className = '' }) => (
+const LogoSVG = ({ style = {} }) => (
   <svg
-    className={className}
+    style={style}
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 1080 1080"
     aria-hidden="true"
@@ -15,130 +14,64 @@ const LogoSVG = ({ className = '' }) => (
   </svg>
 )
 
-// ─── SVG: Sun Icon ──────────────────────────────────────────────────────────
-const SunIcon = ({ className = 'w-[18px] h-[18px]' }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="12" cy="12" r="5" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-)
+export default function AdminFooter() {
+  const year = new Date().getFullYear()
 
-// ─── SVG: Moon Icon ─────────────────────────────────────────────────────────
-const MoonIcon = ({ className = 'w-[18px] h-[18px]' }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
-)
-
-// ─── SVG: Logout Icon ───────────────────────────────────────────────────────
-const LogoutIcon = ({ className = 'w-[14px] h-[14px]' }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-    <polyline points="16 17 21 12 16 7" />
-    <line x1="21" y1="12" x2="9" y2="12" />
-  </svg>
-)
-
-// ─── SVG: Arrow Left Icon ───────────────────────────────────────────────────
-const ArrowLeftIcon = ({ className = 'w-[13px] h-[13px]' }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-    <line x1="19" y1="12" x2="5" y2="12" />
-    <polyline points="12 19 5 12 12 5" />
-  </svg>
-)
-
-// ─── AdminNavbar ─────────────────────────────────────────────────────────────
-// Props:
-//   isLight       – bool  – current theme state
-//   onThemeToggle – fn    – called when theme toggle clicked
-//   onLogout      – fn    – called when logout button clicked
-//   siteHref      – str   – href for "View Site" link (defaults to "/")
-//
-// Responsive behavior:
-//   < sm   – icon-only actions, no Admin badge, tighter brand tracking/gaps
-//   sm+    – full text labels, Admin badge, original desktop spacing
-//   md+    – original max(2rem, 5vw) edge padding restored
-export default function AdminNavbar({
-  isLight,
-  onThemeToggle,
-  onLogout,
-  siteHref = '/',
-}) {
   return (
-    <nav
-      className={[
-        'sticky top-0 z-[100] w-full',
-        'shadow-[0_1px_0_var(--border)]',
-        'transition-[background] duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
-        isLight
-          ? 'bg-[rgba(244,241,236,0.96)]'
-          : 'bg-[rgba(8,8,8,0.96)]',
-        'backdrop-blur-[20px]',
-        'px-5 sm:px-8 md:px-[max(2rem,5vw)]',
-      ].join(' ')}
-    >
-      <div className="flex items-center justify-between h-16 sm:h-[68px] max-w-[1400px] mx-auto">
+    <footer style={{
+      flexShrink: 0,
+      borderTop: '0.5px solid var(--border)',
+      background: 'var(--sidebar-bg)',
+      height: 51,
+      padding: '0 24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12,
+      position: 'relative',
+    }}>
+      {/* Scoped responsive rule: below 640px, drop the logo lockup so it can't
+          collide with the absolutely-centered copyright text. !important is
+          required here to win over the inline display:flex on the element. */}
+      <style>{`
+        @media (max-width: 640px) {
+          .admin-footer-brand,
+          .admin-footer-buildtag {
+            display: none !important;
+          }
+        }
+      `}</style>
 
-        {/* ── Brand ─────────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-2.5 sm:gap-[10px] min-w-0">
-          <LogoSVG className="h-7 w-7 shrink-0 text-[var(--text)]" />
-          <span
-            className="text-[0.75rem] sm:text-[1rem] font-bold tracking-[0.15em] sm:tracking-[0.35em] uppercase text-[var(--text)] whitespace-nowrap"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            DON ELCLASICO
-          </span>
-          {/* Admin badge — hidden on mobile to save space */}
-          <span className="hidden sm:inline-block shrink-0 text-[0.55rem] tracking-[0.3em] uppercase text-[var(--accent)] border border-[var(--border)] px-2 py-[3px] ml-2 leading-none">
-            Admin
-          </span>
-        </div>
-
-        {/* ── Right actions ─────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 sm:gap-4 md:gap-6 shrink-0">
-
-          {/* View Site link — icon-only on mobile */}
-          <a
-            href={siteHref}
-            aria-label="View site"
-            className="flex items-center gap-[6px] text-[0.65rem] tracking-[0.25em] uppercase text-[var(--text-muted)] transition-colors duration-300 hover:text-[var(--accent)] shrink-0"
-          >
-            <ArrowLeftIcon className="w-4 h-4 sm:w-[13px] sm:h-[13px]" />
-            <span className="hidden sm:inline">View Site</span>
-          </a>
-
-          {/* Logout button — icon-only on mobile */}
-          <button
-            onClick={onLogout}
-            aria-label="Logout"
-            className="flex items-center gap-2 text-[0.65rem] tracking-[0.2em] uppercase text-[var(--text-muted)] px-3 py-2.5 sm:px-[14px] sm:py-[6px] border border-[var(--border)] transition-all duration-300 hover:text-[#c0392b] hover:border-[#c0392b] shrink-0"
-          >
-            <LogoutIcon className="w-[18px] h-[18px] sm:w-[14px] sm:h-[14px]" />
-            <span className="hidden sm:inline">Logout</span>
-          </button>
-
-          {/* Theme toggle */}
-          <button
-            onClick={onThemeToggle}
-            aria-label="Toggle theme"
-            className="text-[var(--text)] transition-colors duration-300 hover:text-[var(--accent)] flex items-center justify-center shrink-0"
-          >
-            {isLight ? (
-              <SunIcon className="w-[22px] h-[22px] sm:w-[18px] sm:h-[18px]" />
-            ) : (
-              <MoonIcon className="w-[22px] h-[22px] sm:w-[18px] sm:h-[18px]" />
-            )}
-          </button>
-
-        </div>
+      {/* Left: logo lockup (hidden on mobile) */}
+      <div className="admin-footer-brand" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <LogoSVG style={{ height: 18, width: 18, color: 'var(--text)', flexShrink: 0 }} />
+        <span style={{
+          fontFamily: 'var(--font-display)', fontSize: '0.65rem', fontWeight: 700,
+          letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--text)',
+        }}>
+          Don Elclasico
+        </span>
       </div>
-    </nav>
+
+      {/* Centre: copyright — always visible, including on mobile */}
+      <span style={{
+        fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--font-mono)',
+        position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+        whiteSpace: 'nowrap',
+      }}>
+        © {year} Don Elclasico Wears
+      </span>
+
+      {/* Right: build tag — hidden on mobile (see media query above) since the
+          centered copyright is wide enough at narrow widths to collide with it.
+          marginLeft:auto keeps it pinned right above 640px regardless of
+          whether the brand lockup is present as a sibling. */}
+      <span className="admin-footer-buildtag" style={{
+        fontSize: 10, color: 'var(--muted)', fontFamily: 'var(--font-mono)',
+        opacity: 0.5, whiteSpace: 'nowrap', marginLeft: 'auto',
+      }}>
+        Admin v1.0
+      </span>
+    </footer>
   )
 }
