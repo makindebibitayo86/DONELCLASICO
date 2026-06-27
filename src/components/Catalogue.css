@@ -28,7 +28,6 @@
   --cat-skeleton-shine2:    rgba(255, 255, 255, 0.14);
 }
 
-[data-theme="light"],
 .light {
   --cat-modal-bg:           #faf8f5;
   --cat-modal-border:       rgba(0, 0, 0, 0.10);
@@ -56,34 +55,6 @@
   --cat-skeleton-shine2:    rgba(0, 0, 0, 0.10);
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]):not(.dark) {
-    --cat-modal-bg:           #faf8f5;
-    --cat-modal-border:       rgba(0, 0, 0, 0.10);
-    --cat-modal-text:         #1a1614;
-    --cat-modal-text-muted:   rgba(26, 22, 20, 0.55);
-    --cat-modal-text-mid:     rgba(26, 22, 20, 0.65);
-    --cat-modal-text-dim:     rgba(26, 22, 20, 0.40);
-    --cat-modal-text-subdim:  rgba(26, 22, 20, 0.75);
-    --cat-modal-close-bg:     rgba(255, 255, 255, 0.7);
-    --cat-modal-close-border: rgba(0, 0, 0, 0.15);
-    --cat-modal-close-color:  rgba(0, 0, 0, 0.55);
-    --cat-modal-close-hover:  rgba(0, 0, 0, 0.30);
-    --cat-modal-note-bg:      rgba(0, 0, 0, 0.03);
-    --cat-modal-note-border:  rgba(0, 0, 0, 0.12);
-    --cat-modal-note-focus:   rgba(0, 0, 0, 0.22);
-    --cat-modal-note-ph:      rgba(0, 0, 0, 0.25);
-    --cat-modal-scroll:       rgba(0, 0, 0, 0.1);
-    --cat-card-bg:            #f0ece6;
-    --cat-card-border:        rgba(0, 0, 0, 0.08);
-    --cat-dot-inactive:       rgba(0, 0, 0, 0.15);
-    --cat-arrow-btn-border:   rgba(0, 0, 0, 0.14);
-    --cat-arrow-btn-color:    rgba(0, 0, 0, 0.40);
-    --cat-skeleton-bg:        rgba(0, 0, 0, 0.06);
-    --cat-skeleton-shine1:    rgba(0, 0, 0, 0.05);
-    --cat-skeleton-shine2:    rgba(0, 0, 0, 0.10);
-  }
-}
 
 /* ─── Section shell ────────────────────────────────────────── */
 .catalogue-section {
