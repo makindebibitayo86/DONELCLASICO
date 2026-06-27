@@ -146,7 +146,7 @@ export default function Navbar({ isLight, onThemeToggle }) {
   return (
     <nav
       id="navbar"
-      style={lockedTheme}
+      style={{ ...lockedTheme, paddingTop: 'env(safe-area-inset-top)' }}
       className={[
         'fixed top-0 left-0 right-0 z-[1000]',
         'px-4 md:px-16',
