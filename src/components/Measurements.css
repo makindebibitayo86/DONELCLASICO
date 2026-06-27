@@ -1,6 +1,13 @@
 /* ── Measurements theme tokens ── */
 
-/* Default: light (safe baseline — avoids broken fallback chain on mobile) */
+/* ── Theme token strategy ──────────────────────────────────────────────────────
+   Android Chrome bug: if [data-theme="light"] or .light is on <html> at paint
+   time, it wins over the :root media query (same specificity, later in source).
+   Fix: guard the media query with :not([data-theme]) so it only fires when NO
+   explicit theme is set. Explicit selectors always take priority either way.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Unconditional base — light tokens. Applied whenever nothing else matches. */
 :root {
   --mf-bg:              #f5f2ee;
   --mf-input-bg:        rgba(0, 0, 0, 0.03);
@@ -15,9 +22,11 @@
   --mf-toast-color:     #f2f0ec;
 }
 
-/* OS-level dark mode (catches mobile Safari, Android Chrome, etc.) */
+/* OS dark mode — only when no explicit [data-theme] is present on :root.
+   The :not([data-theme]) guard gives this rule higher specificity than plain
+   :root, so it correctly overrides the base above on Android Chrome. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --mf-bg:              #141414;
     --mf-input-bg:        rgba(255, 255, 255, 0.025);
     --mf-input-border:    rgba(255, 255, 255, 0.10);
@@ -32,7 +41,7 @@
   }
 }
 
-/* Explicit dark override (JS-toggled theme) */
+/* Explicit dark override (JS-toggled theme on <html>) */
 [data-theme="dark"],
 .dark {
   --mf-bg:              #141414;
@@ -48,7 +57,7 @@
   --mf-toast-color:     #f2f0ec;
 }
 
-/* Explicit light override (JS-toggled theme) */
+/* Explicit light override (JS-toggled theme on <html>) */
 [data-theme="light"],
 .light {
   --mf-bg:              #f5f2ee;

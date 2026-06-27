@@ -124,7 +124,7 @@ export default function ContactSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Barlow:wght@200;300;400&display=swap');
 
-        /* ── Light theme (safe default baseline) ── */
+        /* ── Light theme (unconditional base) ── */
         :root {
           --cs-bg:            #f5f2ee;
           --cs-border:        rgba(0,0,0,0.08);
@@ -139,9 +139,12 @@ export default function ContactSection() {
           --cs-icon-border:   rgba(138,111,94,0.28);
         }
 
-        /* ── OS-level dark mode (catches mobile Safari, Android Chrome, etc.) ── */
+        /* ── OS dark mode — :not([data-theme]) guard fixes Android Chrome ──
+           :root:not([data-theme]) has higher specificity than plain :root, so
+           it beats the base light tokens above without conflicting with
+           explicit [data-theme="dark"] / .dark overrides below. ── */
         @media (prefers-color-scheme: dark) {
-          :root {
+          :root:not([data-theme]) {
             --cs-bg:            #141414;
             --cs-border:        rgba(255,255,255,0.06);
             --cs-accent:        #b8a898;
