@@ -124,44 +124,15 @@ export default function ContactSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Barlow:wght@200;300;400&display=swap');
 
-        /* ── Light theme (unconditional base) ── */
+        /* ── Theme tokens ────────────────────────────────────────────────────────
+           App.jsx theme logic:
+             dark mode = no class on <html>  (the default/baseline)
+             light mode = .light class added to <html> and <body>
+           So dark is the baseline and .light overrides to light tokens.
+           ── */
+
+        /* Default = dark */
         :root {
-          --cs-bg:            #f5f2ee;
-          --cs-border:        rgba(0,0,0,0.08);
-          --cs-accent:        #8a6f5e;
-          --cs-accent-sub:    #6b5244;
-          --cs-text-primary:  #1a1614;
-          --cs-text-muted:    #6b6460;
-          --cs-card-bg:       rgba(0,0,0,0.02);
-          --cs-card-border:   rgba(0,0,0,0.08);
-          --cs-card-bg-hover: rgba(138,111,94,0.06);
-          --cs-card-bdr-hover:rgba(138,111,94,0.28);
-          --cs-icon-border:   rgba(138,111,94,0.28);
-        }
-
-        /* ── OS dark mode — :not([data-theme]) guard fixes Android Chrome ──
-           :root:not([data-theme]) has higher specificity than plain :root, so
-           it beats the base light tokens above without conflicting with
-           explicit [data-theme="dark"] / .dark overrides below. ── */
-        @media (prefers-color-scheme: dark) {
-          :root:not([data-theme]) {
-            --cs-bg:            #141414;
-            --cs-border:        rgba(255,255,255,0.06);
-            --cs-accent:        #b8a898;
-            --cs-accent-sub:    #d4c8b8;
-            --cs-text-primary:  #f2f0ec;
-            --cs-text-muted:    #787470;
-            --cs-card-bg:       rgba(255,255,255,0.02);
-            --cs-card-border:   rgba(255,255,255,0.06);
-            --cs-card-bg-hover: rgba(184,168,152,0.03);
-            --cs-card-bdr-hover:rgba(184,168,152,0.18);
-            --cs-icon-border:   rgba(184,168,152,0.18);
-          }
-        }
-
-        /* ── Explicit dark override (JS-toggled theme) ── */
-        [data-theme="dark"],
-        .dark {
           --cs-bg:            #141414;
           --cs-border:        rgba(255,255,255,0.06);
           --cs-accent:        #b8a898;
@@ -175,8 +146,7 @@ export default function ContactSection() {
           --cs-icon-border:   rgba(184,168,152,0.18);
         }
 
-        /* ── Explicit light override (JS-toggled theme) ── */
-        [data-theme="light"],
+        /* Light mode — App.jsx adds .light to <html> and <body> */
         .light {
           --cs-bg:            #f5f2ee;
           --cs-border:        rgba(0,0,0,0.08);
