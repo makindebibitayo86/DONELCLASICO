@@ -134,7 +134,6 @@ function Carousel({ children, onCardClick }) {
     () => typeof window !== 'undefined' && window.innerWidth < 768
   )
   const [activeDot, setActiveDot] = useState(0)
-  const [showSwipeHint, setShowSwipeHint] = useState(true)
 
   const items = Array.isArray(children) ? children : [children]
   const dotCount = items.length
@@ -202,15 +201,9 @@ function Carousel({ children, onCardClick }) {
     el.scrollBy({ left: dir * el.clientWidth * 0.55, behavior: 'smooth' })
   }
 
-  const baselineScrollRef = useRef(null)
-
   function onMobileScroll() {
     const el = trackRef.current
     if (!el) return
-    if (baselineScrollRef.current === null) baselineScrollRef.current = el.scrollLeft
-    if (showSwipeHint && Math.abs(el.scrollLeft - baselineScrollRef.current) > 4) {
-      setShowSwipeHint(false)
-    }
     const max = el.scrollWidth - el.clientWidth
     if (max <= 0) { setActiveDot(0); return }
     setActiveDot(Math.min(Math.round((el.scrollLeft / max) * (dotCount - 1)), dotCount - 1))
@@ -266,13 +259,11 @@ function Carousel({ children, onCardClick }) {
           </div>
         )}
 
-        {showSwipeHint && (
-          <div className="cat-carousel__swipe-hint visible">
-            <span className="cat-carousel__swipe-arrow">←</span>
-            <span>Swipe to explore</span>
-            <span className="cat-carousel__swipe-arrow">→</span>
-          </div>
-        )}
+        <div className="cat-carousel__swipe-hint visible">
+          <span className="cat-carousel__swipe-arrow">←</span>
+          <span>Swipe to explore</span>
+          <span className="cat-carousel__swipe-arrow">→</span>
+        </div>
       </div>
     )
   }
